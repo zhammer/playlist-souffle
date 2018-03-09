@@ -48,7 +48,7 @@ provider:
 
 functions:
   fetch-spotify-access-token:
-    description: Obtain a spotify access token given a spotify authorization (refresh) token
+    description: Obtain a spotify access token given a spotify refresh token
     handler: fetch-spotify-access-token/handler.main
     environment:
       SPOTIFY_CLIENT_ID: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_ID}
