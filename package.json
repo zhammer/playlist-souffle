@@ -1,0 +1,10 @@
+{
+  "name": "playlist-souffle",
+  "description": "serverless npm plugins for playlist-souffle",
+  "version": "0.1.0",
+  "dependencies": {},
+  "devDependencies": {
+    "serverless-kms-secrets": "^1.0.2",
+    "serverless-python-requirements": "^3.3.1"
+  }
+}
