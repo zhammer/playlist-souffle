@@ -21,25 +21,17 @@ provider:
   name: aws
   runtime: python3.6
 
+  # TODO: Move to a fetch-spotify-access-token local role.
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+      - KMS:Decrypt
+      Resource: ${self:custom.kmsSecrets.keyArn}
+
 # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
 
 # you can define service wide environment variables here
 #  environment:
@@ -58,6 +50,10 @@ functions:
   fetch-spotify-access-token:
     description: Obtain a spotify access token given a spotify authorization (refresh) token
     handler: fetch-spotify-access-token/handler.main
+    environment:
+      SPOTIFY_CLIENT_ID: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_SECRET}
+
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -107,3 +103,6 @@ functions:
 plugins:
   - serverless-python-requirements
   - serverless-kms-secrets
+
+custom:
+  kmsSecrets: ${file(kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
