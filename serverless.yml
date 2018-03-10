@@ -51,6 +51,10 @@ provider:
 #    - exclude-me.py
 #    - exclude-me-dir/**
 
+package:
+  include:
+    - souffle/**
+
 functions:
   fetch-spotify-access-token:
     description: Obtain a spotify access token given a spotify refresh token

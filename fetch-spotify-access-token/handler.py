@@ -1,10 +1,9 @@
 """AWS lambda function for obtaining a spotify access token given a spotify refresh token."""
 
-from base64 import b64decode
 import logging
 import os
-import boto3
 import requests
+from souffle.util import decrypt_kms_string
 
 SPOTIFY_ACCESS_TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'
 GRANT_TYPE = 'refresh_token'
@@ -54,23 +53,7 @@ def fetch_spotify_access_token(refresh_token, client_id, client_secret):
         )
         return None
 
-# TODO: Move to common module
-def decrypt_kms_string(encrypted_string):
-    """Decrypt string encrypted with the lambda's kms key. Returns the decrypted value on success.
-    Raises a RuntimeError if the encrypted string cannot be decoded by kms."""
-    kms = boto3.client('kms')
-    encrypted_bytes = b64decode(encrypted_string)
-    response = kms.decrypt(CiphertextBlob=encrypted_bytes)
 
-    try:
-        decrypted_string = response['Plaintext']
-    except KeyError:
-        raise RuntimeError('Kms decryption for string "{}" failed. Respose: "{}".'.format(
-            encrypted_string,
-            response
-        ))
-
-    return decrypted_string
 
 
 def main(event, context):
