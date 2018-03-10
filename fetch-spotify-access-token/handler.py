@@ -35,23 +35,23 @@ def fetch_spotify_access_token(refresh_token, client_id, client_secret):
         params=payload
     )
 
-    if response.status_code == requests.codes.ok:
-        access_token = response.json()['access_token']
-        logger.debug(
-            'Successfully retrieved access token "***%s" for refresh token "***%s".',
-            access_token[-4:],
-            refresh_token[-4:]
-        )
-        return access_token
-
-    # If the request fails, log the error and return None
-    else:
+    # If request fails, raise HTTPError
+    if not response.status_code == requests.codes.ok:
         logger.info(
             'Failed to retrieve access token for refresh token "***%s". HTTP status: %s.',
             refresh_token[-4:],
             response.status_code
         )
-        return None
+        raise requests.HTTPError()
+
+    # Extract access token and return
+     access_token = response.json()['access_token']
+     logger.debug(
+         'Successfully retrieved access token "***%s" for refresh token "***%s".',
+         access_token[-4:],
+         refresh_token[-4:]
+     )
+     return access_token
 
 
 
@@ -68,22 +68,15 @@ def main(event, context):
     # Get event variables
     refresh_token = event['refreshToken']
 
-    # Fetch access token
-    access_token = fetch_spotify_access_token(
-        refresh_token,
-        spotify_client_id,
-        spotify_client_secret
-    )
-
-    # TODO: Research aws lambda standards of request/response return values.
-    #
-    # Return access token and (optional) error message
-    # error_message = None if access_token else 'Failed to obtain access token'
-    # payload = {
-    #     'accessToken': access_token,
-    #     'errorMessage': error_message
-    # }
-    # return payload
+    # Fetch access token. If token is not obtained, return 401 UNAUTHORIZED.
+    try:
+        access_token = fetch_spotify_access_token(
+            refresh_token,
+            spotify_client_id,
+            spotify_client_secret
+        )
+    except requests.HTTPError:
+        return None
 
     # Return access token as a raw string
     return access_token
