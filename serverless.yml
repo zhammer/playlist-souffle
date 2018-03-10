@@ -27,6 +27,11 @@ provider:
       Action:
       - KMS:Decrypt
       Resource: ${self:custom.kmsSecrets.keyArn}
+    # Invoke lambda
+    - Effect: Allow
+      Action:
+      - lambda:InvokeFunction
+      Resource: arn:aws:lambda:us-east-1:550212734867:function:playlist-souffle-dev-fetch-spotify-access-token
 
 # you can overwrite defaults here
 #  stage: dev
@@ -53,6 +58,17 @@ functions:
     environment:
       SPOTIFY_CLIENT_ID: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_ID}
       SPOTIFY_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_SECRET}
+
+  fetch-spotify-access-token-proxy:
+    description: API Gateway proxy wrapper for fetch-spotify-access-token
+    handler: fetch-spotify-access-token-proxy/handler.main
+    events:
+      - http:
+          path: /accesstoken
+          method: post # to match POST https://accounts.spotify.com/api/token
+          cors: true
+
+
 
 
 #    The following are a few example events you can configure
