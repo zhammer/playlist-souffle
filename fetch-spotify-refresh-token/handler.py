@@ -42,7 +42,7 @@ def fetch_spotify_refresh_token(authorization_token, redirect_uri, client_id, cl
     response = requests.post(
         SPOTIFY_REFRESH_TOKEN_ENDPOINT,
         auth=(client_id, client_secret),
-        params=payload
+        data=payload
     )
 
     # If request fails, raise an HTTPError

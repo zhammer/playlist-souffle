@@ -32,7 +32,7 @@ def fetch_spotify_access_token(refresh_token, client_id, client_secret):
     response = requests.post(
         SPOTIFY_ACCESS_TOKEN_ENDPOINT,
         auth=(client_id, client_secret),
-        params=payload
+        data=payload
     )
 
     # If request fails, raise HTTPError
@@ -45,13 +45,13 @@ def fetch_spotify_access_token(refresh_token, client_id, client_secret):
         raise requests.HTTPError()
 
     # Extract access token and return
-     access_token = response.json()['access_token']
-     logger.debug(
-         'Successfully retrieved access token "***%s" for refresh token "***%s".',
-         access_token[-4:],
-         refresh_token[-4:]
-     )
-     return access_token
+    access_token = response.json()['access_token']
+    logger.debug(
+        'Successfully retrieved access token "***%s" for refresh token "***%s".',
+        access_token[-4:],
+        refresh_token[-4:]
+    )
+    return access_token
 
 
 
