@@ -3,6 +3,7 @@
 Available functions:
 - decrypt_kms_string: Decrypt a kms-encrypted string.
 - extract_bearer_token: Extract a bearer token from a Bearer auth header.
+- extract_bearer_token_from_api_event: Extract a bearer token from an API Gateway event.
 - fetch_spotify_access_token: Fetch a spotify access token using a refresh token via a lambda call.
 - generate_api_gateway_response: Generate an api gateway response with a statuscode and json body.
 """
@@ -55,11 +56,25 @@ def extract_bearer_token(string):
 
     """
     match = re.match(EXTRACT_BEARER_TOKEN_RE, string)
-    if not match:
-        logger.debug('Failed to extract bearer token from authorization header: %s', string)
-        return None
+    return match.group(1) if match else None
 
-    return match.group(1)
+
+def extract_bearer_token_from_api_event(event):
+    """Extracts a bearer token from an api gateway event. Returns the api token on success.
+    Raises a LookupError If the Authorization header is missing, or if the Authorization header
+    does not contain a valid Bearer token."""
+    try:
+        auth_header = event['headers']['Authorization']
+    except KeyError:
+        logger.debug('Missing "Authorization" header in event %s.', event)
+        raise LookupError('Missing "Authorization" header.')
+
+    bearer_token = extract_bearer_token(auth_header)
+    if not bearer_token:
+        logger.debug('Failed to extract bearer token from authorization header: %s', auth_header)
+        raise LookupError('Invalid Bearer token')
+
+    return bearer_token
 
 
 def fetch_spotify_access_token(refresh_token):

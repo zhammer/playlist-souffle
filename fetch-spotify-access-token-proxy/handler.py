@@ -9,7 +9,7 @@ would reduce the cost from two lambda calls to one.
 import logging
 from souffle.util import (
     generate_api_gateway_response,
-    extract_bearer_token,
+    extract_bearer_token_from_api_event,
     fetch_spotify_access_token
 )
 
@@ -19,22 +19,13 @@ def main(event, context):
     """AWS lambda event handler"""
     logger.debug('Handling event "%s". Context: "%s"', event, context)
 
-    # If event doesn't contain an Authorization header, send 400 BAD_REQUEST
+    # If event doesn't contain a valid Bearer token, return 400 BAD_REQUEST
     try:
-        auth_header = event['headers']['Authorization']
-    except KeyError:
-        logger.debug('Missing "Authorization" header in event %s', event)
+        refresh_token = extract_bearer_token_from_api_event(event)
+    except LookupError as e:
         return generate_api_gateway_response(
             400,
-            message='Missing "Authorization" header.'
-        )
-
-    # If event doesn't contain valid Bearer token, send 400 BAD_REQUEST
-    refresh_token = extract_bearer_token(auth_header)
-    if not refresh_token:
-        return generate_api_gateway_response(
-            400,
-            message='Invalid Bearer token.'
+            message=str(e)
         )
 
     # Fetch access token. If token is not obtained, return 401 UNAUTHORIZED.
@@ -42,7 +33,7 @@ def main(event, context):
     if not access_token:
         return generate_api_gateway_response(401)
 
-    # If token is obtained, return access token in 200 OK response.
+    # Return access token with 200 OK status code.
     return generate_api_gateway_response(
         200,
         accessToken=access_token
