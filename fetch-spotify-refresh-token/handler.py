@@ -4,6 +4,7 @@ authorization token."""
 
 import logging
 import os
+from urllib.parse import parse_qs
 import requests
 from souffle.util import (
     decrypt_kms_string,
@@ -84,7 +85,7 @@ def main(event, context):
 
     # If event doesn't contain the redirectUri field, send 400 BAD_REQUEST
     try:
-        redirect_uri = event['queryStringParameters']['redirectUri']
+        redirect_uri = parse_qs(event['body'])['redirectUri'][0]
     except KeyError:
         return generate_api_gateway_response(
             400,
