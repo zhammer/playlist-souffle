@@ -3,7 +3,12 @@
 import logging
 import os
 import requests
-from souffle.util import decrypt_kms_string
+from souffle.util import (
+    decrypt_kms_string,
+    extract_bearer_token_from_api_event,
+    generate_api_gateway_response
+    )
+
 
 SPOTIFY_ACCESS_TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'
 GRANT_TYPE = 'refresh_token'
@@ -54,8 +59,6 @@ def fetch_spotify_access_token(refresh_token, client_id, client_secret):
     return access_token
 
 
-
-
 def main(event, context):
     """AWS lambda event handler"""
 
@@ -65,8 +68,14 @@ def main(event, context):
     spotify_client_id = decrypt_kms_string(os.environ['SPOTIFY_CLIENT_ID'])
     spotify_client_secret = decrypt_kms_string(os.environ['SPOTIFY_CLIENT_SECRET'])
 
-    # Get event variables
-    refresh_token = event['refreshToken']
+    # If event doesn't contain a valid Bearer token, return 400 BAD_REQUEST
+    try:
+        refresh_token = extract_bearer_token_from_api_event(event)
+    except LookupError as e:
+        return generate_api_gateway_response(
+            400,
+            message=str(e)
+        )
 
     # Fetch access token. If token is not obtained, return 401 UNAUTHORIZED.
     try:
@@ -76,7 +85,10 @@ def main(event, context):
             spotify_client_secret
         )
     except requests.HTTPError:
-        return None
+        return generate_api_gateway_response(401)
 
-    # Return access token as a raw string
-    return access_token
+    # Return access token with 200 OK status code.
+    return generate_api_gateway_response(
+        200,
+        accessToken=access_token
+    )

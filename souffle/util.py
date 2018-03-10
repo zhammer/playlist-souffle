@@ -4,7 +4,6 @@ Available functions:
 - decrypt_kms_string: Decrypt a kms-encrypted string.
 - extract_bearer_token: Extract a bearer token from a Bearer auth header.
 - extract_bearer_token_from_api_event: Extract a bearer token from an API Gateway event.
-- fetch_spotify_access_token: Fetch a spotify access token using a refresh token via a lambda call.
 - generate_api_gateway_response: Generate an api gateway response with a statuscode and json body.
 """
 
@@ -15,7 +14,6 @@ import re
 import boto3
 
 EXTRACT_BEARER_TOKEN_RE = r'Bearer ([^\s]+)$'
-FETCH_SPOTIFY_TOKEN_LAMBDA = 'playlist-souffle-dev-fetch-spotify-access-token'
 
 logger = logging.getLogger(__name__)
 
@@ -75,32 +73,6 @@ def extract_bearer_token_from_api_event(event):
         raise LookupError('Invalid Bearer token')
 
     return bearer_token
-
-
-def fetch_spotify_access_token(refresh_token):
-    """Fetch a spotify access token given a refresh token. Returns spotify access token on success,
-    otherwise returns None.
-    Note: This function calls an external lambda function that fetches the access token. This
-    funtion does not interact with the spotify api itself.
-    """
-    lambda_client = boto3.client('lambda')
-
-    payload = {'refreshToken': refresh_token}
-    response = lambda_client.invoke(
-        FunctionName=FETCH_SPOTIFY_TOKEN_LAMBDA,
-        Payload=json.dumps(payload).encode()
-    )
-
-    if not response['StatusCode'] == 200:
-        logger.warning(
-            'Received %d status code from "%s" invocation.',
-            response['StatusCode'],
-            FETCH_SPOTIFY_TOKEN_LAMBDA
-        )
-        return None
-
-    access_token = json.loads(response['Payload'].read())
-    return access_token
 
 
 def generate_api_gateway_response(status_code, **body_kwargs):
