@@ -72,6 +72,18 @@ functions:
           method: post # to match POST https://accounts.spotify.com/api/token
           cors: true
 
+  fetch-spotify-refresh-token:
+    description: Obtain a spotify refresh token given a spotify auth token
+    handler: fetch-spotify-refresh-token/handler.main
+    environment:
+      SPOTIFY_CLIENT_ID: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_SECRET}
+    events:
+      - http:
+          path: /refreshtoken
+          method: post # to match POST https://accounts.spotify.com/api/token
+          cors: true
+
 
 
 
