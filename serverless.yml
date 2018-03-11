@@ -75,6 +75,15 @@ functions:
           method: post # to match POST https://accounts.spotify.com/api/token
           cors: true
 
+  shuffle-playlist:
+    description: Shuffle a playlists tracks by artist or album
+    handler: shuffle-playlist/handler.main
+    events:
+      - http:
+          path: /souffle
+          method: post
+          cors: true
+
 
 
 
