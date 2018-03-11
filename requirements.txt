@@ -23,5 +23,6 @@ requests==2.18.4
 rsa==3.4.2
 s3transfer==0.1.12
 six==1.11.0
+spotipy==2.4.4
 urllib3==1.22
 Werkzeug==0.13
