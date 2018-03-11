@@ -63,7 +63,7 @@ def extract_bearer_token_from_api_event(event):
     does not contain a valid Bearer token."""
     try:
         auth_header = event['headers']['Authorization']
-    except KeyError:
+    except (KeyError, TypeError):
         logger.debug('Missing "Authorization" header in event %s.', event)
         raise LookupError('Missing "Authorization" header.')
 
