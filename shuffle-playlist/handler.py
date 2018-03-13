@@ -50,12 +50,6 @@ def main(event, context):
             body={'message':'Missing field: "{}".'.format(e)}
         )
 
-    # Optional fields
-    try:
-        destination_uri = request_body['destinationUri'][0]
-    except KeyError:
-        destination_uri = None
-
     # Setup spotipy client
     try:
         spotify = Spotify(access_token)
@@ -65,7 +59,7 @@ def main(event, context):
 
     # Souffle playlist
     try:
-        souffled_playlist_uri = souffle_playlist(playlist_uri, shuffle_by, user_id, spotify, destination_uri)
+        souffled_playlist_uri = souffle_playlist(playlist_uri, shuffle_by, user_id, spotify)
     except SouffleParameterError as e:
         return generate_api_gateway_response(400, body={'message': e})
     except SpotifyException as e:

@@ -279,35 +279,26 @@ def generate_souffle_name(original_name):
     return SOUFFLE_NAME_DEGREE_FMT.format(playlist_name, souffle_degree + 1)
 
 
-def souffle_playlist(playlist_uri, shuffle_by, user_id, spotify, destination_uri=None):
+def souffle_playlist(playlist_uri, shuffle_by, user_id, spotify):
     """Souffle"""
     logger.info(
-        'souffle: playlist_uri: "%s", shuffle_by: "%s", user_id: "%s", destination_uri: "%s"',
+        'Souffleing playlist. (playlist_uri: "%s", shuffle_by: "%s", user_id: "%s")',
         playlist_uri,
         shuffle_by,
-        user_id,
-        destination_uri
+        user_id
     )
 
     playlist_name = fetch_playlist_name(playlist_uri, spotify)
     playlist_tracks = fetch_playlist_tracks(playlist_uri, spotify)
 
     shuffled_tracks = shuffle_tracks(playlist_tracks, shuffle_by, spotify)
-
-    # If this is not a resouffle request, generate a souffle name and create a new playlist.
-    if not destination_uri:
-        destination_name = generate_souffle_name(playlist_name)
-        response = spotify.user_playlist_create(user_id, destination_name)
-        destination_uri = response['uri']
-        destination_id = response['id']
-
-    # Otherwise, clear the existing playlist to repopulate with the resouffled tracks.
-    else:
-        raise NotImplemented('Souffleing a playlist in-place (resouffle) NYI.')
-        # TODO: get id from destination
-        # TODO: remove tracks from original playlist
-
     track_ids = [track.id for track in shuffled_tracks]
+
+    destination_name = generate_souffle_name(playlist_name)
+    response = spotify.user_playlist_create(user_id, destination_name)
+    destination_uri = response['uri']
+    destination_id = response['id']
+
     spotify.user_playlist_add_tracks(user_id, destination_id, track_ids)
 
     return destination_uri
