@@ -12,11 +12,13 @@ logger = logging.getLogger(__name__)
 def generate_spotify_exception_response(exception):
     """Generate an api gateway response based on a spotify exception."""
     if exception.code == 401:
-        return generate_api_gateway_response(401, message=exception.msg)
+        return generate_api_gateway_response(401, body={'message':exception.msg})
     else:
         return generate_api_gateway_response(
             500,
-            message='Encountered error connecting to Spotify api. Message: "{}".'.format(exception.msg)
+            body={
+                'message':'Encountered Spotify api error. Message: "{}".'.format(exception.msg)
+            }
         )
 
 
@@ -31,7 +33,7 @@ def main(event, context):
     except LookupError as e:
         return generate_api_gateway_response(
             400,
-            message=str(e)
+            body={'message':str(e)}
         )
 
     # Extract request body
@@ -45,7 +47,7 @@ def main(event, context):
     except KeyError as e:
         return generate_api_gateway_response(
             400,
-            message='Missing field: "{}".'.format(e)
+            body={'message':'Missing field: "{}".'.format(e)}
         )
 
     # Optional fields
@@ -65,7 +67,7 @@ def main(event, context):
     try:
         souffle_playlist(playlist_uri, shuffle_by, user_id, spotify, destination_uri)
     except SouffleParameterError as e:
-        return generate_api_gateway_response(400, message=e)
+        return generate_api_gateway_response(400, body={'message': e})
     except SpotifyException as e:
         return generate_spotify_exception_response(e)
     # except Exception as e:

@@ -75,25 +75,28 @@ def extract_bearer_token_from_api_event(event):
     return bearer_token
 
 
-def generate_api_gateway_response(status_code, **body_kwargs):
+def generate_api_gateway_response(status_code, headers=None, body=None):
     """Generate an http response for a lambda API Gateway proxy function with a given status
-    code and body.
+    code, headers and body.
 
     Args:
         status_code: Integer of http status code
-        body_kwargs: Keyword args used to populate response body JSON
+        headers: Dictionary of response headers
+        body: Response body (will be converted to json).
 
     Returns:
         Dict representation of response
 
-    >>> generate_api_gateway_response(200, message='Success!')
+    >>> generate_api_gateway_response(200, body={'message':'Success!'})
     {'statusCode': 200, 'body': '{"message": "Success!"}'}
 
     """
     response = {
         'statusCode': status_code
     }
-    if body_kwargs:
-        response['body'] = json.dumps(body_kwargs)
+    if headers:
+        response['headers'] = headers
+    if body:
+        response['body'] = json.dumps(body)
 
     return response

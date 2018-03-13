@@ -154,8 +154,8 @@ class TestExtractBearerTokenFromApiEvent(object):
 class TestGenerateApiGatewayResponse(object):
     """Tests for souffle.util.generate_api_gateway_response"""
 
-    def test_no_kwargs(self):
-        """No kwargs. Should just return statuscode."""
+    def test_no_header_or_body(self):
+        """No header or body. Should just return statuscode."""
 
         # Given / When
         response = generate_api_gateway_response(401)
@@ -165,17 +165,19 @@ class TestGenerateApiGatewayResponse(object):
         assert response == expected_response
 
 
-    def test_scalar_body_kwargs(self):
+    def test_scalar_body_fields(self):
         """Body fields are all scalar fields. Should return valid gateway response."""
 
         # Given / When
         response = generate_api_gateway_response(
             200,
-            foo='foo_value',
-            bar='bar_value',
-            number=1337,
-            flag=True,
-            empty=None
+            body={
+                'foo':'foo_value',
+                'bar':'bar_value',
+                'number':1337,
+                'flag':True,
+                'empty':None
+            }
         )
 
         # Then
@@ -186,19 +188,42 @@ class TestGenerateApiGatewayResponse(object):
         assert response == expected_response
 
 
-    def test_complex_body_kwargs(self):
+    def test_complex_body_fields(self):
         """Body fields are all scalar fields. Should return valid gateway response."""
 
         # Given / When
         response = generate_api_gateway_response(
             200,
-            foo=['f', 'o', 'o'],
-            bar={'type': 'law exam'}
+            body={
+                'foo':['f', 'o', 'o'],
+                'bar':{'type': 'law exam'}
+            }
         )
 
         # Then
         expected_response = {
             'statusCode': 200,
             'body': '{"foo": ["f", "o", "o"], "bar": {"type": "law exam"}}'
+        }
+        assert response == expected_response
+
+
+    def test_headers(self):
+        """Body fields are all scalar fields. Should return valid gateway response."""
+
+        # Given / When
+        headers = {
+            'FooHeader':'FooValue',
+            'BarHeader':'BarValue'
+        }
+        response = generate_api_gateway_response(
+            200,
+            headers=headers
+        )
+
+        # Then
+        expected_response = {
+            'statusCode': 200,
+            'headers': headers
         }
         assert response == expected_response

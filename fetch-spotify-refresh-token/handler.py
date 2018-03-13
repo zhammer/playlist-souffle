@@ -80,7 +80,7 @@ def main(event, context):
     except LookupError as e:
         return generate_api_gateway_response(
             400,
-            message=str(e)
+            body={'message':str(e)}
         )
 
     # If event doesn't contain the redirectUri field, send 400 BAD_REQUEST
@@ -89,7 +89,7 @@ def main(event, context):
     except KeyError:
         return generate_api_gateway_response(
             400,
-            message='Request must contain a "redirectUri" field'
+            body={'message':'Request must contain a "redirectUri" field'}
         )
 
     # Get environment variables
@@ -112,6 +112,8 @@ def main(event, context):
     # Return refresh and access tokens with 200 OK status code.
     return generate_api_gateway_response(
         200,
-        refreshToken=refresh_token,
-        accessToken=access_token
+        body={
+            'refreshToken':refresh_token,
+            'accessToken':access_token
+        }
     )

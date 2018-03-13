@@ -74,7 +74,7 @@ def main(event, context):
     except LookupError as e:
         return generate_api_gateway_response(
             400,
-            message=str(e)
+            body={'message':str(e)}
         )
 
     # Fetch access token. If token is not obtained, return 401 UNAUTHORIZED.
@@ -90,5 +90,5 @@ def main(event, context):
     # Return access token with 200 OK status code.
     return generate_api_gateway_response(
         200,
-        accessToken=access_token
+        body={'accessToken':access_token}
     )
