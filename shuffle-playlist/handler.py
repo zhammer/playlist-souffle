@@ -65,7 +65,7 @@ def main(event, context):
 
     # Souffle playlist
     try:
-        souffle_playlist(playlist_uri, shuffle_by, user_id, spotify, destination_uri)
+        souffled_playlist_uri = souffle_playlist(playlist_uri, shuffle_by, user_id, spotify, destination_uri)
     except SouffleParameterError as e:
         return generate_api_gateway_response(400, body={'message': e})
     except SpotifyException as e:
@@ -75,4 +75,4 @@ def main(event, context):
     #     return generate_api_gateway_response(500)
 
     # Return success
-    return generate_api_gateway_response(200)
+    return generate_api_gateway_response(201, headers={'Location': souffled_playlist_uri})
