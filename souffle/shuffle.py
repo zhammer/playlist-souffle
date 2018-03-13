@@ -181,6 +181,48 @@ def remove_tracks_from_collections(collections_map, tracks_to_remove, collection
     return collections_map
 
 
+
+def get_artist_to_tracks_map(artist_ids, spotify, deep_cuts=False):
+    """For a list of artist_ids, fetch the collection of spotify tracks for each artist.
+    By default fetches the top tracks of each artist.
+
+    If deep_cuts is set to True, fetch the tracks of each artist more randomly, NYI.
+
+    Note: this will likely be refactored to use a batch fetch in the future.
+
+    Args:
+        artist_ids: List of spotify artist id strings
+        spotify: Spotify client
+        deep_cuts: If True, fetch a collection of artist tracks from source other than Top Tracks.
+
+    Returns:
+        Dictionary mapping artist_ids to Track namedtuples
+
+    """
+    if deep_cuts:
+        raise NotImplemented('Deep cuts mode not yet implemented.')
+
+    return {artist_id: fetch_collection_tracks(artist_id, 'artist', spotify)
+            for artist_id in artist_ids}
+
+
+def get_album_to_tracks_map(album_ids, spotify):
+    """For a list of albumids, fetch the collection of spotify tracks on each album.
+
+    Note: this will likely be refactored to use a batch fetch in the future.
+
+    Args:
+        album_ids: List of spotify album id strings
+        spotify: Spotify client
+
+    Returns:
+        Dictionary mapping album ids to Track namedtuples
+
+    """
+    return {album_id: fetch_collection_tracks(album_id, 'album', spotify)
+            for album_id in album_ids}
+
+
 def shuffle_tracks(tracks, shuffle_by, spotify):
     """Shuffle a list of Track namedtuples by artist or album, in which each track is shuffled
     out with another track on that track's artist or album. If there are no other tracks on a
@@ -208,13 +250,10 @@ def shuffle_tracks(tracks, shuffle_by, spotify):
         raise SouffleParameterError('Invalid shuffle_by type "{}".'.format(shuffle_by))
 
     # For each collection (album or arist) get all of the tracks on that collection
-    collection_to_tracks_map = {}
-    for collection_id in collection_ids:
-        collection_to_tracks_map[collection_id] = fetch_collection_tracks(
-            collection_id=collection_id,
-            collection_type=shuffle_by,
-            spotify=spotify
-        )
+    if shuffle_by == 'artist':
+        collection_to_tracks_map = get_artist_to_tracks_map(collection_ids, spotify)
+    elif shuffle_by == 'album':
+        collection_to_tracks_map = get_album_to_tracks_map(collection_ids, spotify)
 
     # Remove all original tracks from the collections to tracks map to avoid
     collection_to_tracks_map = remove_tracks_from_collections(
