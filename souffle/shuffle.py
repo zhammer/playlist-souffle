@@ -3,9 +3,13 @@
 from collections import namedtuple
 import logging
 import random
+import re
 from souffle.exception import SouffleParameterError
 
 SPOTIFY_PLAYLIST_FIELDS = 'items(track(id, artists.id, album.id))'
+SOUFFLE_NAME_RE = r'(.*)\[souffle(?:\^(\d+))?\]$'
+SOUFFLE_NAME_NO_DEGREE_FMT = '{} [souffle]'
+SOUFFLE_NAME_DEGREE_FMT = '{} [souffle^{}]'
 
 logger = logging.getLogger(__name__)
 
@@ -106,6 +110,13 @@ def fetch_playlist_tracks(playlist_uri, spotify):
     return playlist_tracks
 
 
+def fetch_playlist_name(playlist_uri, spotify):
+    """Fetch the name of a playlist from spotify."""
+    user_id, playlist_id = extract_playlist_uri_components(playlist_uri)
+    return spotify.user_playlist(user_id, playlist_id, fields='name')['name']
+
+
+
 #####################
 # Shuffle functions #
 #####################
@@ -161,7 +172,11 @@ def remove_tracks_from_collections(collections_map, tracks_to_remove, collection
     """
     for track in tracks_to_remove:
         collection_id = track._asdict()[collection_type]
-        collections_map[collection_id].remove(track)
+        collection_tracks = collections_map[collection_id]
+        try:
+            collection_tracks.remove(track)
+        except KeyError:
+            pass
 
     return collections_map
 
@@ -227,6 +242,43 @@ def shuffle_tracks(tracks, shuffle_by, spotify):
 
     return shuffled_tracks
 
+
+def generate_souffle_name(original_name):
+    """Generate the name of a souffled playlist. On a non-souffled playlist, add [souffle] to the
+    end of playlist name. On a souffled playlist -- a playlist ending in [souffle] -- increment
+    degree, i.e "[souffle^2]".
+
+    >>> generate_souffle_name('my playlist')
+    'my playlist [souffle]'
+
+    >>> generate_souffle_name('my playlist [souffle]')
+    'my playlist [souffle^2]'
+
+    >>> generate_souffle_name('my playlist [souffle^3]')
+    'my playlist [souffle^4]'
+
+    >>> generate_souffle_name('my playlist [souffle^130]')
+    'my playlist [souffle^131]'
+
+    """
+    match = re.match(SOUFFLE_NAME_RE, original_name)
+
+    # Playlist name doesn't end in '[souffle]'. Append souffle to end of name and return.
+    if not match:
+        return SOUFFLE_NAME_NO_DEGREE_FMT.format(original_name.rstrip())
+
+    # Playlist name ends in '[souffle(^\d+)?]. Increment the souffle degree.
+    playlist_name = match.group(1).rstrip()
+
+    # Extract the souffle degree if it exists, if it doesn't set to 1.
+    try:
+        souffle_degree = int(match.group(2))
+    except TypeError:
+        souffle_degree = 1
+
+    return SOUFFLE_NAME_DEGREE_FMT.format(playlist_name, souffle_degree + 1)
+
+
 def souffle_playlist(playlist_uri, shuffle_by, user_id, spotify, destination_uri=None):
     """Souffle"""
     logger.info(
@@ -237,19 +289,25 @@ def souffle_playlist(playlist_uri, shuffle_by, user_id, spotify, destination_uri
         destination_uri
     )
 
+    playlist_name = fetch_playlist_name(playlist_uri, spotify)
     playlist_tracks = fetch_playlist_tracks(playlist_uri, spotify)
 
     shuffled_tracks = shuffle_tracks(playlist_tracks, shuffle_by, spotify)
 
-    # TODO: Get original playlist name
-
+    # If this is not a resouffle request, generate a souffle name and create a new playlist.
     if not destination_uri:
-        response = spotify.user_playlist_create(user_id, 'Souffle TEST')
-        destination_uri = response['id']
+        destination_name = generate_souffle_name(playlist_name)
+        response = spotify.user_playlist_create(user_id, destination_name)
+        destination_uri = response['uri']
+        destination_id = response['id']
 
+    # Otherwise, clear the existing playlist to repopulate with the resouffled tracks.
     else:
-        # remove tracks from original playlist
-        pass
+        raise NotImplemented('Souffleing a playlist in-place (resouffle) NYI.')
+        # TODO: get id from destination
+        # TODO: remove tracks from original playlist
 
     track_ids = [track.id for track in shuffled_tracks]
-    spotify.user_playlist_add_tracks(user_id, destination_uri, track_ids)
+    spotify.user_playlist_add_tracks(user_id, destination_id, track_ids)
+
+    return destination_uri
