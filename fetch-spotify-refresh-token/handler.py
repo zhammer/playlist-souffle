@@ -93,7 +93,7 @@ def main(event, context):
         )
 
     # Get environment variables
-    spotify_client_id = decrypt_kms_string(os.environ['SPOTIFY_CLIENT_ID'])
+    spotify_client_id = os.environ['SPOTIFY_CLIENT_ID']
     spotify_client_secret = decrypt_kms_string(os.environ['SPOTIFY_CLIENT_SECRET'])
 
     # Fetch refresh and access tokens. If tokens are not obtained, returned 401 UNAUTHORIZED.

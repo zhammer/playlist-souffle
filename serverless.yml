@@ -55,7 +55,7 @@ functions:
     description: Obtain a spotify access token given a spotify refresh token
     handler: fetch-spotify-access-token/handler.main
     environment:
-      SPOTIFY_CLIENT_ID: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_ID: b231329aba1a4c539375436a267db917
       SPOTIFY_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_SECRET}
     events:
       - http:
@@ -67,7 +67,7 @@ functions:
     description: Obtain a spotify refresh token given a spotify auth token
     handler: fetch-spotify-refresh-token/handler.main
     environment:
-      SPOTIFY_CLIENT_ID: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_ID: b231329aba1a4c539375436a267db917
       SPOTIFY_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_SECRET}
     events:
       - http:

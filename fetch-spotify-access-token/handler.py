@@ -65,7 +65,7 @@ def main(event, context):
     logger.debug('Handling event "%s". Context: "%s"', event, context)
 
     # Get environment variables
-    spotify_client_id = decrypt_kms_string(os.environ['SPOTIFY_CLIENT_ID'])
+    spotify_client_id = os.environ['SPOTIFY_CLIENT_ID']
     spotify_client_secret = decrypt_kms_string(os.environ['SPOTIFY_CLIENT_SECRET'])
 
     # If event doesn't contain a valid Bearer token, return 400 BAD_REQUEST
