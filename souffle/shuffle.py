@@ -247,7 +247,7 @@ def shuffle_tracks(tracks, shuffle_by, spotify):
     try:
         collection_ids = {track._asdict()[shuffle_by] for track in tracks}
     except KeyError:
-        raise SouffleParameterError('Invalid shuffle_by type "{}".'.format(shuffle_by))
+        raise SouffleParameterError('Invalid shuffle_by type "%s".', shuffle_by)
 
     # For each collection (album or arist) get all of the tracks on that collection
     if shuffle_by == 'artist':
@@ -255,10 +255,10 @@ def shuffle_tracks(tracks, shuffle_by, spotify):
     elif shuffle_by == 'album':
         collection_to_tracks_map = get_album_to_tracks_map(collection_ids, spotify)
 
-    # Remove all original tracks from the collections to tracks map to avoid
+    # Remove all original tracks from the collections to tracks map to avoid duplicates
     collection_to_tracks_map = remove_tracks_from_collections(
-        collections_map=collection_to_tracks_map,
-        tracks_to_remove=tracks,
+        collection_to_tracks_map,
+        tracks,
         collection_type=shuffle_by
     )
 
@@ -267,6 +267,7 @@ def shuffle_tracks(tracks, shuffle_by, spotify):
     for track in tracks:
         collection_id = track._asdict()[shuffle_by]
         collection_tracks = collection_to_tracks_map[collection_id]
+
 
         # Nothing to shuffle with
         if not collection_tracks:
