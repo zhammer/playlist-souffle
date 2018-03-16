@@ -1,21 +1,4 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: playlist-souffle
-
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: "=X.X.X"
 
 provider:
   name: aws
@@ -28,24 +11,6 @@ provider:
       - KMS:Decrypt
       Resource: ${self:custom.kmsSecrets.keyArn}
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
-
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.py
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.py
-#    - exclude-me-dir/**
-
 package:
   include:
     - souffle/**
@@ -55,7 +20,7 @@ functions:
     description: Obtain a spotify access token given a spotify refresh token
     handler: fetch-spotify-access-token/handler.main
     environment:
-      SPOTIFY_CLIENT_ID: b231329aba1a4c539375436a267db917
+      SPOTIFY_CLIENT_ID: ${self:custom.spotifyClientId}
       SPOTIFY_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_SECRET}
     events:
       - http:
@@ -67,7 +32,7 @@ functions:
     description: Obtain a spotify refresh token given a spotify auth token
     handler: fetch-spotify-refresh-token/handler.main
     environment:
-      SPOTIFY_CLIENT_ID: b231329aba1a4c539375436a267db917
+      SPOTIFY_CLIENT_ID: ${self:custom.spotifyClientId}
       SPOTIFY_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_SECRET}
     events:
       - http:
@@ -84,57 +49,10 @@ functions:
           method: post
           cors: true
 
-
-
-
-#    The following are a few example events you can configure
-#    NOTE: Please make sure to change your handler code to work with those events
-#    Check the event documentation for details
-#    events:
-#      - http:
-#          path: users/create
-#          method: get
-#      - s3: ${env:BUCKET}
-#      - schedule: rate(10 minutes)
-#      - sns: greeter-topic
-#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
-#      - alexaSkill
-#      - alexaSmartHome: amzn1.ask.skill.xx-xx-xx-xx
-#      - iot:
-#          sql: "SELECT * FROM 'some_topic'"
-#      - cloudwatchEvent:
-#          event:
-#            source:
-#              - "aws.ec2"
-#            detail-type:
-#              - "EC2 Instance State-change Notification"
-#            detail:
-#              state:
-#                - pending
-#      - cloudwatchLog: '/aws/lambda/hello'
-#      - cognitoUserPool:
-#          pool: MyUserPool
-#          trigger: PreSignUp
-
-#    Define function environment variables here
-#    environment:
-#      variable2: value2
-
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
-
 plugins:
   - serverless-python-requirements
   - serverless-kms-secrets
 
 custom:
   kmsSecrets: ${file(kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
+  spotifyClientId: b231329aba1a4c539375436a267db917
