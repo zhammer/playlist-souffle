@@ -27,6 +27,7 @@ def _parse_args():
               '67db917&response_type=code&redirect_uri=https://127.0.0.1:8100&scope=playlist-modify-public"\n'
               '2. Enter your spotify username and password to grant playlist-modify-public scope.\n'
               '3. Copy the authorization code returned as a url parameter: "/?code={AUTHORIZATION_CODE}"\n'
+              '   - Auth redirection will error, but the auth code can still be extracted from the url.\n'
               '4. Use the scripts/refreshtoken.sh script to obtain a refresh token and access token\n'
               '5. If your access token expires, use the scripts/accesstoken.sh script to obtain a fresh '
               'access token.')
