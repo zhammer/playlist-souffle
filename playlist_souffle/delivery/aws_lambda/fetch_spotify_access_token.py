@@ -3,11 +3,11 @@
 import logging
 import os
 import requests
-from souffle.util import (
+from playlist_souffle.delivery.aws_lambda.util import (
     decrypt_kms_string,
     extract_bearer_token_from_api_event,
     generate_api_gateway_response
-    )
+)
 
 
 SPOTIFY_ACCESS_TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'

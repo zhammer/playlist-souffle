@@ -3,9 +3,12 @@
 import logging
 from urllib.parse import parse_qs
 from spotipy import Spotify, SpotifyException
-from souffle.exception import SouffleParameterError
-from souffle.shuffle import souffle_playlist
-from souffle.util import extract_bearer_token_from_api_event, generate_api_gateway_response
+from playlist_souffle.definitions.exception import SouffleParameterError
+from playlist_souffle.use_cases.souffle_playlist import souffle_playlist
+from playlist_souffle.delivery.aws_lambda.util import (
+    extract_bearer_token_from_api_event,
+    generate_api_gateway_response
+)
 
 logger = logging.getLogger(__name__)
 
