@@ -10,7 +10,7 @@ import urllib.parse
 import requests
 
 SOUFFLE_ENDPOINT_URL = 'https://wumxvuo5nb.execute-api.us-east-1.amazonaws.com/dev/souffle'
-SOUFFLE_LOCAL_CMD_FMT = 'sls invoke local -f shuffle-playlist -p {} --log'
+SOUFFLE_LOCAL_CMD_FMT = 'sls invoke local -f souffle-playlist -p {} --log'
 
 def _parse_args():
     """Helper function to create the command-line argument parser for souffle-tester.  Return

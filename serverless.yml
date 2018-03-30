@@ -40,7 +40,7 @@ functions:
           method: post # to match POST https://accounts.spotify.com/api/token
           cors: true
 
-  shuffle-playlist:
+  souffle-playlist:
     description: Shuffle a playlists tracks by artist or album
     handler: playlist_souffle/delivery/aws_lambda/souffle_playlist.handler
     events:
