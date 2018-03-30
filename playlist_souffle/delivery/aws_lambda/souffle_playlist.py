@@ -2,8 +2,9 @@
 
 import logging
 from urllib.parse import parse_qs
-from spotipy import Spotify, SpotifyException
+from spotipy import SpotifyException
 from playlist_souffle.definitions.exception import SouffleParameterError
+from playlist_souffle.gateways.spotify import SpotifyGateway
 from playlist_souffle.use_cases.souffle_playlist import souffle_playlist
 from playlist_souffle.delivery.aws_lambda.util import (
     extract_bearer_token_from_api_event,
@@ -25,7 +26,7 @@ def generate_spotify_exception_response(exception):
         )
 
 
-def main(event, context):
+def handler(event, context):
     """AWS lambda event handler"""
 
     logger.debug('Handling event "%s". Context: "%s"', event, context)
@@ -55,14 +56,14 @@ def main(event, context):
 
     # Setup spotipy client
     try:
-        spotify = Spotify(access_token)
+        spotify = SpotifyGateway(access_token)
     except SpotifyException as e:
         return generate_spotify_exception_response(e)
 
 
     # Souffle playlist
     try:
-        souffled_playlist_uri = souffle_playlist(playlist_uri, shuffle_by, user_id, spotify)
+        souffled_playlist_uri = souffle_playlist(spotify, playlist_uri, user_id, shuffle_by)
     except SouffleParameterError as e:
         return generate_api_gateway_response(400, body={'message': e})
     except SpotifyException as e:

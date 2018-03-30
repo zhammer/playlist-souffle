@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
@@ -11,7 +11,5 @@ setup(
     author_email='zach.the.hammer@gmail.com',
     url='https://github.com/zhammer/playlist-souffle',
 
-    install_requires=requirements,
-    packages=find_packages(where='src'),
-    package_dir={'':'src'}
+    install_requires=requirements
 )

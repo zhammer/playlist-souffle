@@ -69,7 +69,7 @@ def fetch_spotify_refresh_token(authorization_token, redirect_uri, client_id, cl
     return refresh_token, access_token
 
 
-def main(event, context):
+def handler(event, context):
     """AWS lambda event handler"""
 
     logger.debug('Handling event "%s". Context: "%s"', event, context)

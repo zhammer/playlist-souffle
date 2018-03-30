@@ -84,8 +84,8 @@ class SpotifyGateway:
 
 
     @staticmethod
-    def _create_playlist_with_tracks(user_id, playlist_name, tracks, spotify):
+    def _create_playlist_with_tracks(user_id, playlist_name, tracks, public, description, spotify):
         """Create a new playlist for USER_ID with TRACKS. Return the uri & id of the new playlist"""
-        playlist_uri, playlist_id = create_playlist(user_id, playlist_name, spotify)
+        playlist_uri, playlist_id = create_playlist(user_id, playlist_name, public, description, spotify)
         add_tracks_to_playlist(user_id, playlist_id, tracks, spotify)
         return playlist_uri

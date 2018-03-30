@@ -1,3 +1,5 @@
 [run]
-omit = src/playlist_souffle/delivery/*
+source = playlist_souffle
+omit = playlist_souffle/delivery/aws_lambda/fetch*
+       playlist_souffle/delivery/aws_lambda/souffle*
        *__init__*

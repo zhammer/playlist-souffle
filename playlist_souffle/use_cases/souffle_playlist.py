@@ -29,7 +29,7 @@ def souffle_playlist(spotify, playlist_uri, user_id, shuffle_by):
         dt.now()
     )
 
-    souffled_playlist_uri = spotify.create_playlist(
+    souffled_playlist_uri = spotify.create_playlist_with_tracks(
         user_id,
         souffled_playlist_name,
         souffled_playlist_tracks,
