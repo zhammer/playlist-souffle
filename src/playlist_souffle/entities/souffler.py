@@ -37,13 +37,15 @@ def generate_souffle_name(original_name):
 
 
 def souffle_tracks(tracks, track_collections):
-    """Souffle a list of tracks using track_collections, a map of tracks to the set of tracks in
-    each top-level track's collection.
+    """Souffle a list of tracks, swapping out each track for another track on its collection,
+    using track_collections: a dict mapping tracks in 'tracks' to the set of tracks in their
+    collections.
     """
+    tracks_set = set(tracks)
     souffled_tracks = []
     for track in tracks:
         collection_tracks = track_collections[track]
-        valid_tracks = collection_tracks - {track} - set(souffled_tracks)
+        valid_tracks = collection_tracks - tracks_set - set(souffled_tracks)
         souffled_track = random.sample(valid_tracks, 1)[0] if valid_tracks else track
         souffled_tracks.append(souffled_track)
 
