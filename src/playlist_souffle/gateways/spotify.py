@@ -39,12 +39,14 @@ class SpotifyGateway:
         )
 
 
-    def create_playlist_with_tracks(self, user_id, playlist_name, tracks):
+    def create_playlist_with_tracks(self, user_id, playlist_name, tracks, public=True, description=''):
         """Create a new playlist for USER_ID with TRACKS. Return the uri of the new playlist."""
         return SpotifyGateway._create_playlist_with_tracks(
             user_id,
             playlist_name,
             tracks,
+            public,
+            description,
             self._spotify
         )
 

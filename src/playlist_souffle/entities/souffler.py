@@ -6,6 +6,21 @@ import re
 SOUFFLE_NAME_RE = r'(.*)\[souffle(?:\^(\d+))?\]$'
 SOUFFLE_NAME_NO_DEGREE_FMT = '{} [souffle]'
 SOUFFLE_NAME_DEGREE_FMT = '{} [souffle^{}]'
+SOUFFLE_DESCRIPTION_FMT = 'Souffled from "{original_name}" by "{shuffle_by}" at {time_of_souffle}.'
+
+def generate_souffle_description(original_name, shuffle_by, time_of_souffle):
+    """Generate a description for a souffled playlist.
+
+    >>> from datetime import datetime as dt
+    >>> time_of_souffle = dt(1968, 11, 22, hour=9, minute=30, second=15)
+    >>> generate_souffle_description('my playlist', 'artist', time_of_souffle)
+    'Souffled from "my playlist" by "artist" at 1968-11-22 09:30:15.'
+    """
+    return SOUFFLE_DESCRIPTION_FMT.format(
+        original_name=original_name,
+        shuffle_by=shuffle_by,
+        time_of_souffle=time_of_souffle
+    )
 
 
 def generate_souffle_name(original_name):

@@ -72,9 +72,10 @@ def fetch_playlist_track_data(user_id, playlist_id, spotify):
     return [item['track'] for item in response['items']]
 
 
-def create_playlist(user_id, playlist_name, spotify):
+def create_playlist(user_id, playlist_name, public, description, spotify):
     """Create a playlist for USER_ID with name PLAYLIST_NAME. Return its uri and id as a tuple."""
-    response = spotify.user_playlist_create(user_id, playlist_name)
+    # NOTE: It seems PR #196 for spotipy, adding description support, was never added.
+    response = spotify.user_playlist_create(user_id, playlist_name, public)
     return response['uri'], response['id']
 
 
