@@ -4,7 +4,7 @@ Available functions:
 - decrypt_kms_string: Decrypt a kms-encrypted string.
 - extract_bearer_token: Extract a bearer token from a Bearer auth header.
 - extract_bearer_token_from_api_event: Extract a bearer token from an API Gateway event.
-- generate_api_gateway_response: Generate an api gateway response with a statuscode and json body.
+- generate_api_gateway_response: Generate an api gateway response with a statuscode, header and body.
 """
 
 from base64 import b64decode
@@ -76,27 +76,15 @@ def extract_bearer_token_from_api_event(event):
 
 
 def generate_api_gateway_response(status_code, headers=None, body=None):
-    """Generate an http response for a lambda API Gateway proxy function with a given status
-    code, headers and body.
-
-    Args:
-        status_code: Integer of http status code
-        headers: Dictionary of response headers
-        body: Response body (will be converted to json).
-
-    Returns:
-        Dict representation of response
-
-    >>> generate_api_gateway_response(200, body={'message':'Success!'})
-    {'statusCode': 200, 'body': '{"message": "Success!"}'}
-
+    """Generate a lambda API Gateway response with a given status_code, headers dict, and
+    jsonifyable body. The 'headers' and 'body' keys will not be present in the generated response
+    if those fields are empty.
     """
     response = {
-        'statusCode': status_code
+        'statusCode': status_code,
+        'headers': headers,
+        'body': json.dumps(body)
     }
-    if headers:
-        response['headers'] = headers
-    if body:
-        response['body'] = json.dumps(body)
 
-    return response
+    return {k: v for k, v in response.items()
+            if v and not v == 'null'}
