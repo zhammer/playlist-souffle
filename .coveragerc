@@ -1,0 +1,3 @@
+[run]
+omit = src/playlist_souffle/delivery/*
+       *__init__*
