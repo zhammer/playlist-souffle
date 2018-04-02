@@ -14,9 +14,13 @@ def souffle_playlist(spotify, playlist_uri, user_id, shuffle_by):
     collection_id_by_track = {track: track_entity.extract_track_collection_id(track, shuffle_by)
                               for track in playlist_tracks}
 
-    collection_tracks_by_track = {track: spotify.fetch_collection_tracks(collection_id, shuffle_by)
-                                  for track, collection_id in collection_id_by_track.items()}
+    collection_tracks_by_collection_id = spotify.fetch_collection_tracks_by_collection_id(
+        collection_id_by_track.values(),
+        collection_type=shuffle_by
+    )
 
+    collection_tracks_by_track = {track: collection_tracks_by_collection_id[collection_id_by_track[track]]
+                                  for track in playlist_tracks}
 
     playlist = Playlist(
         owner=user_id,

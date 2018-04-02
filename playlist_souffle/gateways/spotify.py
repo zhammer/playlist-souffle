@@ -1,5 +1,6 @@
 """Module for spotify gateway"""
 
+from concurrent import futures
 from spotipy import Spotify
 from playlist_souffle.definitions.exception import SouffleParameterError
 from playlist_souffle.gateways.spotify_util import (
@@ -14,7 +15,7 @@ class SpotifyGateway:
 
     def __init__(self, access_token):
         """C'tor"""
-        self._spotify = Spotify(access_token)
+        self._spotify = Spotify(access_token, requests_session=False)
 
 
     def fetch_playlist_tracks(self, playlist_uri):
@@ -44,6 +45,19 @@ class SpotifyGateway:
             raise SouffleParameterError('Invalid shuffle_by type "{}".'.format(collection_type))
 
         return tracks
+
+
+    def fetch_collection_tracks_by_collection_id(self, collection_ids, collection_type):
+        """Fetch a collection_tracks_by_collection_id mapping, given a list of collection_ids and a
+        collection_type.
+        """
+        with futures.ThreadPoolExecutor(max_workers=20) as executor:
+            collection_tracks_by_collection_id = dict(executor.map(
+                lambda id: (id, self.fetch_collection_tracks(id, collection_type)),
+                collection_ids
+            ))
+
+        return collection_tracks_by_collection_id
 
 
     def create_playlist(self, playlist, is_public=True):

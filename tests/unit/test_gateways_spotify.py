@@ -3,6 +3,8 @@
 import pytest
 from unittest.mock import Mock
 from playlist_souffle.definitions.track import Track
+from playlist_souffle.gateways.spotify import SpotifyGateway
+
 from playlist_souffle.gateways.spotify_util import (
     pluck_track,
     fetch_playlist_track_data
@@ -77,6 +79,79 @@ class TestSpotifyUtil:
         # Then
         expected_track = Track('TRACK_ID', 'ARTIST_ID_1', 'ALBUM_ID')
         assert plucked_track == expected_track
+
+
+class TestFetchCollectionTracksByCollectionId:
+    """Tests for playlist_souffle.gateways.fetch_collection_tracks_by_collection_id."""
+
+    def test_one_collection(self, blood_bank_ep):
+        """Test fetch_collection_tracks_by_collection_id with one collection to fetch."""
+        # Given
+        blood_bank_ep_id = 'BLOOD_BANK_EP_ID'
+        collection_ids = [blood_bank_ep_id]
+        collection_type = 'ALBUM'
+        spotify_gateway_mock = Mock()
+        spotify_gateway_mock.fetch_collection_tracks.return_value = set(blood_bank_ep)
+
+        # When
+        collection_tracks_by_collection_id = SpotifyGateway.fetch_collection_tracks_by_collection_id(
+            spotify_gateway_mock,
+            collection_ids,
+            collection_type
+        )
+
+        # Then
+        expected_collection_tracks_by_collection_id = {
+            blood_bank_ep_id: set(blood_bank_ep)
+        }
+        assert collection_tracks_by_collection_id == expected_collection_tracks_by_collection_id
+
+    def test_two_collections(self, blood_bank_ep, soultrane):
+        """Test fetch_collection_tracks_by_collection_id with two collections to fetch."""
+        # Given
+        blood_bank_ep_id = 'BLOOD_BANK_EP_ID'
+        soultrane_id = 'SOULTRANE_ID'
+        collection_ids = [blood_bank_ep_id, soultrane_id]
+        collection_type = 'ALBUM'
+        spotify_gateway_mock = Mock()
+        def side_effect(collection_id, collection_type):
+            return set(soultrane if collection_id == soultrane_id else blood_bank_ep)
+        spotify_gateway_mock.fetch_collection_tracks.side_effect = side_effect
+
+        # When
+        collection_tracks_by_collection_id = SpotifyGateway.fetch_collection_tracks_by_collection_id(
+            spotify_gateway_mock,
+            collection_ids,
+            collection_type
+        )
+
+        # Then
+        expected_collection_tracks_by_collection_id = {
+            blood_bank_ep_id: set(blood_bank_ep),
+            soultrane_id: set(soultrane)
+        }
+        assert collection_tracks_by_collection_id == expected_collection_tracks_by_collection_id
+
+
+
+
+@pytest.fixture()
+def blood_bank_ep():
+    """Blood Bank EP by Bon Iver"""
+    track_names = ['Blood Bank', 'Beach Baby', 'Babys', 'Woods']
+    return [Track(id=track_name, artist='Bon Iver', album='Blood Bank EP')
+            for track_name in track_names]
+
+@pytest.fixture()
+def soultrane():
+    """Soultrane by John Coltrane"""
+    track_names = ['Good Bait',
+                   'I Want To Talk About You',
+                   'You Say You Care',
+                   'Theme For Ernie',
+                   'Russian Lullaby']
+    return [Track(id=track_name, artist='Bon Iver', album='Blood Bank EP')
+            for track_name in track_names]
 
 
 @pytest.fixture()

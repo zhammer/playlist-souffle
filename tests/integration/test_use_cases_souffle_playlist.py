@@ -28,9 +28,11 @@ class TestSoufflePlaylist:
         injected_dt =  dt(1968, 11, 22, hour=9, minute=30, second=15)
 
         spotify_mock = Mock()
-        def fetch_playlist_tracks_side_effect(collection_id, shuffle_by):
-            return set(art_tatum_tracks if collection_id == 'Art Tatum' else the_xx_tracks)
-        spotify_mock.fetch_collection_tracks.side_effect = fetch_playlist_tracks_side_effect
+        collection_tracks_by_collection_id = {
+            'Art Tatum': set(art_tatum_tracks),
+            'The xx': set(the_xx_tracks)
+        }
+        spotify_mock.fetch_collection_tracks_by_collection_id.return_value = collection_tracks_by_collection_id
         spotify_mock.fetch_playlist_tracks.return_value = playlist_tracks
         spotify_mock.fetch_playlist_name.return_value = playlist_name
         spotify_mock.create_playlist.return_value = injected_souffled_playlist_uri
