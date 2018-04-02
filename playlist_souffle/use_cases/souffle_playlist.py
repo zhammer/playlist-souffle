@@ -9,15 +9,15 @@ def souffle_playlist(spotify, playlist_uri, user_id, shuffle_by):
 
     playlist_tracks = spotify.fetch_playlist_tracks(playlist_uri)
 
-    playlist_track_collection_ids = {track: track_entity.extract_track_collection_id(track, shuffle_by)
-                                     for track in playlist_tracks}
+    collection_id_by_track = {track: track_entity.extract_track_collection_id(track, shuffle_by)
+                              for track in playlist_tracks}
 
-    playlist_track_collections = {track: spotify.fetch_collection_tracks(collection_id, shuffle_by)
-                                  for track, collection_id in playlist_track_collection_ids.items()}
+    collection_tracks_by_track = {track: spotify.fetch_collection_tracks(collection_id, shuffle_by)
+                                  for track, collection_id in collection_id_by_track.items()}
 
     souffled_playlist_tracks = souffler_entity.souffle_tracks(
         playlist_tracks,
-        playlist_track_collections
+        collection_tracks_by_track
     )
 
     playlist_name = spotify.fetch_playlist_name(playlist_uri)
