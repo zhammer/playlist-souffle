@@ -7,8 +7,7 @@ from playlist_souffle.gateways.spotify_util import (
     create_playlist,
     extract_playlist_uri_components,
     fetch_playlist_track_data,
-    pluck_tracks_as_list,
-    pluck_tracks_as_set
+    pluck_track
 )
 
 
@@ -24,7 +23,7 @@ class SpotifyGateway:
         """Fetch the tracks of a playlist as a list of Track namedtuples."""
         playlist_owner_id, playlist_id = extract_playlist_uri_components(playlist_uri)
         playlist_track_data = fetch_playlist_track_data(playlist_owner_id, playlist_id, self._spotify)
-        return pluck_tracks_as_list(playlist_track_data)
+        return [pluck_track(track_record) for track_record in playlist_track_data]
 
 
     def fetch_playlist_name(self, playlist_uri):
@@ -37,11 +36,11 @@ class SpotifyGateway:
         """Fetch a set of Track namedtuples in a collection of collection_type."""
         if collection_type == 'artist':
             track_data = self._spotify.artist_top_tracks(collection_id)['tracks']
-            tracks = pluck_tracks_as_set(track_data, artist=collection_id)
+            tracks = {pluck_track(track_record, artist=collection_id) for track_record in track_data}
 
         elif collection_type == 'album':
             track_data = self._spotify.album_tracks(collection_id)['items']
-            tracks = pluck_tracks_as_set(track_data, album=collection_id)
+            tracks = {pluck_track(track_record, album=collection_id) for track_record in track_data}
 
         else:
             raise SouffleParameterError('Invalid shuffle_by type "{}".'.format(collection_type))

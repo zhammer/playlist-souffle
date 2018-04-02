@@ -35,30 +35,6 @@ def pluck_track(track_record, artist=None, album=None):
     )
 
 
-def pluck_tracks_as_list(track_records, artist=None, album=None):
-    """Pluck list of Track namedtuples from a list of spotify api track objects.
-    Artist and album default values may be provided, in which case those field's data will not be
-    extracted from the provided track data.
-
-     Note: If there are multiple artists on a track, the plucked track will only contain the id of
-    the first artist listed.
-
-    """
-    return [pluck_track(track_record, artist, album) for track_record in track_records]
-
-
-def pluck_tracks_as_set(track_records, artist=None, album=None):
-    """Pluck list of Track namedtuples from a list of spotify api track objects.
-    Artist and album default values may be provided, in which case those field's data will not be
-    extracted from the provided track data.
-
-    Note: If there are multiple artists on a track, the plucked track will only contain the id of
-    the first artist listed.
-
-    """
-    return {pluck_track(track_record, artist, album) for track_record in track_records}
-
-
 def fetch_playlist_track_data(user_id, playlist_id, spotify):
     """Fetch a list of spotify api track objects as raw data. Only fetch the track.id,
     track.artists.id, and track.album.id fields.
