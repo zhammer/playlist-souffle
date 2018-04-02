@@ -3,7 +3,7 @@
 import random
 import re
 
-SOUFFLE_NAME_RE = r'(.*)\[souffle(?:\^(\d+))?\]$'
+SOUFFLE_NAME_RE = r'(?P<playlist_name>.*)\[souffle(?:\^(?P<souffle_degree>\d+))?\]$'
 SOUFFLE_NAME_NO_DEGREE_FMT = '{} [souffle]'
 SOUFFLE_NAME_DEGREE_FMT = '{} [souffle^{}]'
 SOUFFLE_DESCRIPTION_FMT = 'Souffled from "{original_name}" by "{shuffle_by}" at {time_of_souffle}.'
@@ -45,8 +45,8 @@ def generate_souffle_name(original_name):
     if not match:
         return SOUFFLE_NAME_NO_DEGREE_FMT.format(original_name.rstrip())
 
-    playlist_name = match.group(1).rstrip()
-    souffle_degree = int(match.group(2) or 1)
+    playlist_name = match.group('playlist_name').rstrip()
+    souffle_degree = int(match.group('souffle_degree') or 1)
 
     return SOUFFLE_NAME_DEGREE_FMT.format(playlist_name, souffle_degree + 1)
 
