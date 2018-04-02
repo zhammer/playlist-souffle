@@ -2,7 +2,7 @@
 
 import pytest
 from playlist_souffle.definitions.track import Track
-from playlist_souffle.entities.souffler import (
+from playlist_souffle.entities.souffler_util import (
     generate_souffle_name,
     souffle_tracks
 )

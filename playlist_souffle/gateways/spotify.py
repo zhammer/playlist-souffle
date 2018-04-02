@@ -3,8 +3,6 @@
 from spotipy import Spotify
 from playlist_souffle.definitions.exception import SouffleParameterError
 from playlist_souffle.gateways.spotify_util import (
-    add_tracks_to_playlist,
-    create_playlist,
     extract_playlist_uri_components,
     fetch_playlist_track_data,
     pluck_track
@@ -48,8 +46,13 @@ class SpotifyGateway:
         return tracks
 
 
-    def create_playlist_with_tracks(self, user_id, playlist_name, tracks, public=True, description=''):
-        """Create a new playlist for USER_ID with TRACKS. Return the uri of the new playlist."""
-        playlist_uri, playlist_id = create_playlist(self._spotify, user_id, playlist_name, public, description)
-        add_tracks_to_playlist(self._spotify, user_id, playlist_id, tracks)
+    def create_playlist(self, playlist, is_public=True):
+        """Create a new playlist for the given Playlist namedtuple.  Return the uri of the new
+        playlist.
+        """
+        response = self._spotify.user_playlist_create(playlist.owner, playlist.name, is_public)
+        playlist_uri, playlist_id = response['uri'], response['id']
+
+        playlist_track_ids = [track.id for track in playlist.tracks]
+        self._spotify.user_playlist_add_tracks(playlist.owner, playlist_id, playlist_track_ids)
         return playlist_uri

@@ -1,67 +1,29 @@
 """Module for souffler entity."""
 
-import random
-import re
+from playlist_souffle.definitions.playlist import Playlist
+from playlist_souffle.entities.souffler_util import (
+    generate_souffle_description,
+    generate_souffle_name,
+    souffle_tracks
+)
 
-SOUFFLE_NAME_RE = r'(?P<playlist_name>.*)\[souffle(?:\^(?P<souffle_degree>\d+))?\]$'
-SOUFFLE_NAME_NO_DEGREE_FMT = '{} [souffle]'
-SOUFFLE_NAME_DEGREE_FMT = '{} [souffle^{}]'
-SOUFFLE_DESCRIPTION_FMT = 'Souffled from "{original_name}" by "{shuffle_by}" at {time_of_souffle}.'
-
-def generate_souffle_description(original_name, shuffle_by, time_of_souffle):
-    """Generate a description for a souffled playlist.
-
-    >>> from datetime import datetime as dt
-    >>> time_of_souffle = dt(1968, 11, 22, hour=9, minute=30, second=15)
-    >>> generate_souffle_description('my playlist', 'artist', time_of_souffle)
-    'Souffled from "my playlist" by "artist" at 1968-11-22 09:30:15.'
+def generate_souffled_playlist(original_playlist, shuffle_by, collection_tracks_by_track, souffle_time):
+    """Generate a souffled playlist given a Playlist namedtuple of the original playlist and a
+    collection_tracks_by_track mapping for souffleing. Returns a Playlist namedtuple.
     """
-    return SOUFFLE_DESCRIPTION_FMT.format(
-        original_name=original_name,
-        shuffle_by=shuffle_by,
-        time_of_souffle=time_of_souffle
+    souffled_playlist_tracks = souffle_tracks(
+        original_playlist.tracks,
+        collection_tracks_by_track
     )
-
-
-def generate_souffle_name(original_name):
-    """Generate the name of a souffled playlist. On a non-souffled playlist, add [souffle] to the
-    end of playlist name. On a souffled playlist -- a playlist ending in [souffle] -- increment
-    degree, i.e "[souffle^2]".
-
-    >>> generate_souffle_name('my playlist')
-    'my playlist [souffle]'
-
-    >>> generate_souffle_name('my playlist [souffle]')
-    'my playlist [souffle^2]'
-
-    >>> generate_souffle_name('my playlist [souffle^3]')
-    'my playlist [souffle^4]'
-
-    >>> generate_souffle_name('my playlist [souffle^130]')
-    'my playlist [souffle^131]'
-    """
-    match = re.match(SOUFFLE_NAME_RE, original_name)
-
-    if not match:
-        return SOUFFLE_NAME_NO_DEGREE_FMT.format(original_name.rstrip())
-
-    playlist_name = match.group('playlist_name').rstrip()
-    souffle_degree = int(match.group('souffle_degree') or 1)
-
-    return SOUFFLE_NAME_DEGREE_FMT.format(playlist_name, souffle_degree + 1)
-
-
-def souffle_tracks(tracks, track_collections):
-    """Souffle a list of tracks, swapping out each track for another track on its collection,
-    using track_collections: a dict mapping tracks in 'tracks' to the set of tracks in their
-    collections.
-    """
-    tracks_set = set(tracks)
-    souffled_tracks = []
-    for track in tracks:
-        collection_tracks = track_collections[track]
-        valid_tracks = collection_tracks - tracks_set - set(souffled_tracks)
-        souffled_track = random.sample(valid_tracks, 1)[0] if valid_tracks else track
-        souffled_tracks.append(souffled_track)
-
-    return souffled_tracks
+    souffled_playlist_name = generate_souffle_name(original_playlist.name)
+    souffled_playlist_description = generate_souffle_description(
+        original_playlist.name,
+        shuffle_by,
+        souffle_time
+    )
+    return Playlist(
+        owner=original_playlist.owner,
+        name=souffled_playlist_name,
+        tracks=souffled_playlist_tracks,
+        description=souffled_playlist_description
+    )

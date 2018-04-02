@@ -5,8 +5,7 @@ from unittest.mock import Mock
 from playlist_souffle.definitions.track import Track
 from playlist_souffle.gateways.spotify_util import (
     pluck_track,
-    fetch_playlist_track_data,
-    create_playlist
+    fetch_playlist_track_data
 )
 
 class TestSpotifyUtil:

@@ -3,6 +3,7 @@
 from datetime import datetime as dt
 from unittest.mock import Mock, patch
 import pytest
+from playlist_souffle.definitions.playlist import Playlist
 from playlist_souffle.definitions.track import Track
 from playlist_souffle.use_cases.souffle_playlist import souffle_playlist
 
@@ -18,16 +19,13 @@ class TestSoufflePlaylist:
         user_id = 'zhammer'
 
         playlist_name = '~coding~'
-        expected_souffled_playlist_name = '~coding~ [souffle]'
 
         art_tatum_track = art_tatum_tracks[0]
         the_xx_track = the_xx_tracks[0]
         playlist_tracks = [art_tatum_track, the_xx_track]
-        expected_souffled_tracks = [art_tatum_tracks[1], the_xx_tracks[1]]
 
         injected_souffled_playlist_uri = 'SOUFFLED_PLAYLIST_URI'
         injected_dt =  dt(1968, 11, 22, hour=9, minute=30, second=15)
-        expected_souffled_playlist_description = 'Souffled from "~coding~" by "artist" at 1968-11-22 09:30:15.'
 
         spotify_mock = Mock()
         def fetch_playlist_tracks_side_effect(collection_id, shuffle_by):
@@ -35,7 +33,7 @@ class TestSoufflePlaylist:
         spotify_mock.fetch_collection_tracks.side_effect = fetch_playlist_tracks_side_effect
         spotify_mock.fetch_playlist_tracks.return_value = playlist_tracks
         spotify_mock.fetch_playlist_name.return_value = playlist_name
-        spotify_mock.create_playlist_with_tracks.return_value = injected_souffled_playlist_uri
+        spotify_mock.create_playlist.return_value = injected_souffled_playlist_uri
 
         # When
         with patch('playlist_souffle.use_cases.souffle_playlist.dt') as mock_dt:
@@ -43,12 +41,16 @@ class TestSoufflePlaylist:
             souffled_playlist_uri = souffle_playlist(spotify_mock, playlist_uri, user_id, 'artist')
 
         # Then
+        expected_playlist = Playlist(
+            owner=user_id,
+            name='~coding~ [souffle]',
+            tracks=[art_tatum_tracks[1], the_xx_tracks[1]],
+            description='Souffled from "~coding~" by "artist" at 1968-11-22 09:30:15.'
+
+        )
         assert souffled_playlist_uri == injected_souffled_playlist_uri
-        spotify_mock.create_playlist_with_tracks.assert_called_once_with(
-            user_id,
-            expected_souffled_playlist_name,
-            expected_souffled_tracks,
-            description=expected_souffled_playlist_description
+        spotify_mock.create_playlist.assert_called_once_with(
+            expected_playlist
         )
 
 
