@@ -22,7 +22,7 @@ class SpotifyGateway:
     def fetch_playlist_tracks(self, playlist_uri):
         """Fetch the tracks of a playlist as a list of Track namedtuples."""
         playlist_owner_id, playlist_id = extract_playlist_uri_components(playlist_uri)
-        playlist_track_data = fetch_playlist_track_data(playlist_owner_id, playlist_id, self._spotify)
+        playlist_track_data = fetch_playlist_track_data(self._spotify, playlist_owner_id, playlist_id)
         return [pluck_track(track_record) for track_record in playlist_track_data]
 
 
@@ -50,6 +50,6 @@ class SpotifyGateway:
 
     def create_playlist_with_tracks(self, user_id, playlist_name, tracks, public=True, description=''):
         """Create a new playlist for USER_ID with TRACKS. Return the uri of the new playlist."""
-        playlist_uri, playlist_id = create_playlist(user_id, playlist_name, public, description, self._spotify)
-        add_tracks_to_playlist(user_id, playlist_id, tracks, self._spotify)
+        playlist_uri, playlist_id = create_playlist(self._spotify, user_id, playlist_name, public, description)
+        add_tracks_to_playlist(self._spotify, user_id, playlist_id, tracks)
         return playlist_uri

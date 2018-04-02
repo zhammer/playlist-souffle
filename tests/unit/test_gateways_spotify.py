@@ -22,7 +22,7 @@ class TestSpotifyUtil:
         playlist_id = ''
 
         # When
-        track_data = fetch_playlist_track_data(user_id, playlist_id, spotify_mock)
+        track_data = fetch_playlist_track_data(spotify_mock, user_id, playlist_id)
 
         # Then
         expected_track_1 = {'album': {'id': 'ALBUM_ID_1'},
