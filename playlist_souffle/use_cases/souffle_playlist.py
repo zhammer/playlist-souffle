@@ -18,13 +18,10 @@ def souffle_playlist(spotify, playlist_uri, user_id, shuffle_by):
     collection_id_by_track = {track: track_entity.extract_track_collection_id(track, shuffle_by)
                               for track in original_playlist.tracks}
 
-    collection_tracks_by_collection_id = spotify.fetch_collection_tracks_by_collection_id(
-        collection_ids=collection_id_by_track.values(),
+    collection_tracks_by_track = spotify.fetch_collection_tracks_by_track(
+        collection_id_by_track,
         collection_type=shuffle_by
     )
-
-    collection_tracks_by_track = {track: collection_tracks_by_collection_id[collection_id]
-                                  for track, collection_id in collection_id_by_track.items()}
 
     souffled_playlist = souffler_entity.generate_souffled_playlist(
         original_playlist,

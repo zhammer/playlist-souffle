@@ -53,17 +53,18 @@ class SpotifyGateway:
 
 
     @raise_spotipy_error_as_souffle_error
-    def fetch_collection_tracks_by_collection_id(self, collection_ids, collection_type):
-        """Fetch a collection_tracks_by_collection_id mapping, given a list of collection_ids and a
-        collection_type.
+    def fetch_collection_tracks_by_track(self, collection_id_by_track, collection_type):
+        """Fetch a collection_tracks_by_collection_track mapping, given a collection_id_by_track
+        mapping and a collection_type.
         """
         with futures.ThreadPoolExecutor(max_workers=20) as executor:
             collection_tracks_by_collection_id = dict(executor.map(
                 lambda id: (id, self.fetch_collection_tracks(id, collection_type)),
-                collection_ids
+                collection_id_by_track.values()
             ))
 
-        return collection_tracks_by_collection_id
+        return {track: collection_tracks_by_collection_id[collection_id]
+                for track, collection_id in collection_id_by_track.items()}
 
 
     @raise_spotipy_error_as_souffle_error
