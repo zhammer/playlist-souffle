@@ -1,9 +1,26 @@
 """Module for spotify gateway util functions"""
 
+import functools
+import spotipy
 from playlist_souffle.definitions.track import Track
-from playlist_souffle.definitions.exception import SouffleParameterError
+from playlist_souffle.definitions.exception import SouffleParameterError, SouffleSpotifyError
 
 SPOTIFY_PLAYLIST_FIELDS = 'items(track(id, artists.id, album.id))'
+
+
+def raise_spotipy_error_as_souffle_error(func):
+    """Decorator that raises spotipy Spotify errors as souffle Spotify errors."""
+    @functools.wraps(func)
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except spotipy.SpotifyException as e:
+            raise SouffleSpotifyError(
+                http_status=e.http_status,
+                message=e.msg
+            )
+    return inner
+
 
 def extract_playlist_uri_components(playlist_uri):
     """Extract the user_id and playlist_id of a playlist from its spotify uri.

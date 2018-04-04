@@ -2,8 +2,7 @@
 
 import logging
 from urllib.parse import parse_qs
-from spotipy import SpotifyException
-from playlist_souffle.definitions.exception import SouffleParameterError
+from playlist_souffle.definitions.exception import SouffleParameterError, SouffleSpotifyError
 from playlist_souffle.gateways.spotify import SpotifyGateway
 from playlist_souffle.use_cases.souffle_playlist import souffle_playlist
 from playlist_souffle.delivery.aws_lambda.util import (
@@ -15,13 +14,13 @@ logger = logging.getLogger(__name__)
 
 def generate_spotify_exception_response(exception):
     """Generate an api gateway response based on a spotify exception."""
-    if exception.code == 401:
-        return generate_api_gateway_response(401, body={'message':exception.msg})
+    if exception.http_status == 401:
+        return generate_api_gateway_response(401, body={'message': exception.message})
     else:
         return generate_api_gateway_response(
             500,
             body={
-                'message':'Encountered Spotify api error. Message: "{}".'.format(exception.msg)
+                'message':'Encountered Spotify api error. Message: "{}".'.format(exception.message)
             }
         )
 
@@ -57,7 +56,7 @@ def handler(event, context):
     # Setup spotipy client
     try:
         spotify = SpotifyGateway(access_token)
-    except SpotifyException as e:
+    except SouffleSpotifyError as e:
         return generate_spotify_exception_response(e)
 
 
@@ -66,7 +65,7 @@ def handler(event, context):
         souffled_playlist_uri = souffle_playlist(spotify, playlist_uri, user_id, shuffle_by)
     except SouffleParameterError as e:
         return generate_api_gateway_response(400, body={'message': e})
-    except SpotifyException as e:
+    except SouffleSpotifyError as e:
         return generate_spotify_exception_response(e)
     # except Exception as e:
     #     logger.error('Unexpected exception: "{}".'.format(e))

@@ -6,18 +6,21 @@ from playlist_souffle.definitions.exception import SouffleParameterError
 from playlist_souffle.gateways.spotify_util import (
     extract_playlist_uri_components,
     fetch_playlist_track_data,
-    pluck_track
+    pluck_track,
+    raise_spotipy_error_as_souffle_error
 )
 
 
 class SpotifyGateway:
     """Class implementing spotify gateway."""
 
+    @raise_spotipy_error_as_souffle_error
     def __init__(self, access_token):
         """C'tor"""
         self._spotify = Spotify(access_token, requests_session=False)
 
 
+    @raise_spotipy_error_as_souffle_error
     def fetch_playlist_tracks(self, playlist_uri):
         """Fetch the tracks of a playlist as a list of Track namedtuples."""
         playlist_owner_id, playlist_id = extract_playlist_uri_components(playlist_uri)
@@ -25,12 +28,14 @@ class SpotifyGateway:
         return [pluck_track(track_record) for track_record in playlist_track_data]
 
 
+    @raise_spotipy_error_as_souffle_error
     def fetch_playlist_name(self, playlist_uri):
         """Fetch the name of a playlist from spotify."""
         playlist_owner_id, playlist_id = extract_playlist_uri_components(playlist_uri)
         return self._spotify.user_playlist(playlist_owner_id, playlist_id, fields='name')['name']
 
 
+    @raise_spotipy_error_as_souffle_error
     def fetch_collection_tracks(self, collection_id, collection_type):
         """Fetch a set of Track namedtuples in a collection of collection_type."""
         if collection_type == 'artist':
@@ -47,6 +52,7 @@ class SpotifyGateway:
         return tracks
 
 
+    @raise_spotipy_error_as_souffle_error
     def fetch_collection_tracks_by_collection_id(self, collection_ids, collection_type):
         """Fetch a collection_tracks_by_collection_id mapping, given a list of collection_ids and a
         collection_type.
@@ -60,6 +66,7 @@ class SpotifyGateway:
         return collection_tracks_by_collection_id
 
 
+    @raise_spotipy_error_as_souffle_error
     def create_playlist(self, playlist, is_public=True):
         """Create a new playlist for the given Playlist namedtuple.  Return the uri of the new
         playlist.

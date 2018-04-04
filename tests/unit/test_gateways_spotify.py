@@ -2,12 +2,15 @@
 
 import pytest
 from unittest.mock import Mock
+import spotipy
+from playlist_souffle.definitions.exception import SouffleSpotifyError
 from playlist_souffle.definitions.track import Track
 from playlist_souffle.gateways.spotify import SpotifyGateway
 
 from playlist_souffle.gateways.spotify_util import (
     pluck_track,
-    fetch_playlist_track_data
+    fetch_playlist_track_data,
+    raise_spotipy_error_as_souffle_error
 )
 
 class TestSpotifyUtil:
@@ -79,6 +82,79 @@ class TestSpotifyUtil:
         # Then
         expected_track = Track('TRACK_ID', 'ARTIST_ID_1', 'ALBUM_ID')
         assert plucked_track == expected_track
+
+
+class TestRaiseSpotipyErrorAsSouffleError:
+    """Tests for decorator playlist_souffle.gateways.spotify_util.raise_spotify_error_as_souffle_error."""
+
+    def test_function_that_returns_and_doesnt_raise(self):
+        """Test a function that returns a value and doesnt raise an exception. Behavior should be
+        unaltered.
+        """
+        # Given
+        @raise_spotipy_error_as_souffle_error
+        def func():
+            return 1337
+
+        # When / Then
+        assert func() == 1337
+
+
+    def test_function_that_doesnt_return_and_doesnt_raise(self):
+        """Test a function that doesnt return a value and doesnt raise an exception. Behavior should
+        be unaltered.
+        """
+        # Given
+        @raise_spotipy_error_as_souffle_error
+        def func():
+            pass
+
+        # When / Then
+        assert func() == None
+
+
+    def test_function_that_raises_runtime_errro(self):
+        """Test a function that raises a runtime error. Runtime error raise should be unmodified."""
+        # Given
+        @raise_spotipy_error_as_souffle_error
+        def func():
+            raise RuntimeError
+
+        # When / Then
+        with pytest.raises(RuntimeError):
+            func()
+
+
+    def test_function_that_doesnt_return_and_doesnt_raise(self):
+        """Test a function that doesnt return a value and doesnt raise an exception. Behavior should
+        be unaltered.
+        """
+        @raise_spotipy_error_as_souffle_error
+        def func():
+            pass
+
+        assert func() == None
+
+
+    def test_function_that_raises_spotipy_error(self):
+        """Test a function that returns a value and doesnt raise an exception. Behavior should be
+        unaltered.
+        """
+        # Given
+        http_status = 401
+        message = "Unauthorized"
+        @raise_spotipy_error_as_souffle_error
+        def func():
+            raise spotipy.SpotifyException(http_status=http_status, code=-1, msg=message)
+
+
+        # When
+        expected = SouffleSpotifyError(http_status=http_status, message=message)
+        with pytest.raises(SouffleSpotifyError) as e:
+            func()
+
+        # Then
+        assert e.value == expected
 
 
 class TestFetchCollectionTracksByCollectionId:
