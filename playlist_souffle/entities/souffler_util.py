@@ -52,15 +52,15 @@ def generate_souffle_name(original_name):
     return SOUFFLE_NAME_DEGREE_FMT.format(playlist_name, souffle_degree + 1)
 
 
-def souffle_tracks(tracks, track_collections):
+def souffle_tracks(tracks, collection_tracks_by_track):
     """Souffle a list of tracks, swapping out each track for another track on its collection,
-    using track_collections: a dict mapping tracks in 'tracks' to the set of tracks in their
-    collections.
+    using collection_tracks_by_track: a dict mapping tracks in 'tracks' to the set of tracks in
+    their collections.
     """
     tracks_set = set(tracks)
     souffled_tracks = []
     for track in tracks:
-        collection_tracks = track_collections[track]
+        collection_tracks = collection_tracks_by_track[track]
         valid_tracks = collection_tracks - tracks_set - set(souffled_tracks)
         souffled_track = random.sample(valid_tracks, 1)[0] if valid_tracks else track
         souffled_tracks.append(souffled_track)
