@@ -5,7 +5,7 @@ from playlist_souffle.definitions.playlist import Playlist
 import playlist_souffle.entities.souffler as souffler_entity
 import playlist_souffle.entities.track as track_entity
 
-def souffle_playlist(spotify, playlist_uri, user_id, shuffle_by):
+def souffle_playlist(spotify, user_id, playlist_uri, shuffle_by):
     """Souffle a playlist."""
 
     original_playlist = Playlist(

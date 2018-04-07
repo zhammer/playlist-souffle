@@ -62,7 +62,7 @@ def handler(event, context):
 
     # Souffle playlist
     try:
-        souffled_playlist_uri = souffle_playlist(spotify, playlist_uri, user_id, shuffle_by)
+        souffled_playlist_uri = souffle_playlist(spotify, user_id, playlist_uri, shuffle_by)
     except SouffleParameterError as e:
         return generate_api_gateway_response(400, body={'message': e})
     except SouffleSpotifyError as e:
