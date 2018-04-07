@@ -91,7 +91,7 @@ def souffle_invoke_local(access_token, **kwargs):
         response = json.loads(out)
         if not response['statusCode'] == requests.codes.created:
             raise RuntimeError('{} response from /souffle endpoint. text: "{}"'.format(
-                response['statusCode'], response['body']['message']
+                response['statusCode'], json.loads(response['body'])['message']
             ))
 
         return response['headers']['Location']

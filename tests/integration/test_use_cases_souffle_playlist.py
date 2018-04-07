@@ -28,11 +28,11 @@ class TestSoufflePlaylist:
         injected_dt =  dt(1968, 11, 22, hour=9, minute=30, second=15)
 
         spotify_mock = Mock()
-        collection_tracks_by_track = {
+        related_tracks_by_track = {
             art_tatum_track: set(art_tatum_tracks),
             the_xx_track: set(the_xx_tracks)
         }
-        spotify_mock.fetch_collection_tracks_by_track.return_value = collection_tracks_by_track
+        spotify_mock.fetch_related_tracks_by_track.return_value = related_tracks_by_track
         spotify_mock.fetch_playlist_tracks.return_value = playlist_tracks
         spotify_mock.fetch_playlist_name.return_value = playlist_name
         spotify_mock.create_playlist.return_value = injected_souffled_playlist_uri

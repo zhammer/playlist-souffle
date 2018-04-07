@@ -7,13 +7,13 @@ from playlist_souffle.entities.souffler_util import (
     souffle_tracks
 )
 
-def generate_souffled_playlist(original_playlist, user_id, shuffle_by, collection_tracks_by_track, souffle_time):
+def generate_souffled_playlist(original_playlist, user_id, shuffle_by, related_tracks_by_track, souffle_time):
     """Generate a souffled playlist given a Playlist namedtuple of the original playlist and a
-    collection_tracks_by_track mapping for souffleing. Returns a Playlist namedtuple.
+    related_tracks_by_track mapping for souffleing. Returns a Playlist namedtuple.
     """
     souffled_playlist_tracks = souffle_tracks(
         original_playlist.tracks,
-        collection_tracks_by_track
+        related_tracks_by_track
     )
     souffled_playlist_name = generate_souffle_name(original_playlist.name)
     souffled_playlist_description = generate_souffle_description(

@@ -157,62 +157,58 @@ class TestRaiseSpotipyErrorAsSouffleError:
         assert e.value == expected
 
 
-class TestFetchCollectionTracksByCollectionTrack:
-    """Tests for playlist_souffle.gateways.fetch_collection_tracks_by_track."""
+class TestFetchRelatedTracksByTrack:
+    """Tests for playlist_souffle.gateways.fetch_related_tracks_by_track."""
 
-    def test_one_collection(self, blood_bank_ep):
-        """Test fetch_collection_tracks_by_track with one collection to fetch."""
+    def test_one_track(self, blood_bank_ep):
+        """Test fetch_related_tracks_by_track with one track."""
         # Given
-        blood_bank_ep_id = 'BLOOD_BANK_EP_ID'
         blood_bank_ep_track_1 = blood_bank_ep[0]
-        collection_id_by_track = {blood_bank_ep_track_1: blood_bank_ep_id}
-        collection_type = 'ALBUM'
+        tracks = [blood_bank_ep_track_1]
+        related_by = 'artist'
+
         spotify_gateway_mock = Mock()
-        spotify_gateway_mock.fetch_collection_tracks.return_value = set(blood_bank_ep)
+        spotify_gateway_mock.fetch_related_tracks.return_value = set(blood_bank_ep)
 
         # When
-        collection_tracks_by_track = SpotifyGateway.fetch_collection_tracks_by_track(
+        related_tracks_by_track = SpotifyGateway.fetch_related_tracks_by_track(
             spotify_gateway_mock,
-            collection_id_by_track,
-            collection_type
+            tracks,
+            related_by
         )
 
         # Then
-        expected_collection_tracks_by_track = {
+        expected_related_tracks_by_track = {
             blood_bank_ep_track_1: set(blood_bank_ep)
         }
-        assert collection_tracks_by_track == expected_collection_tracks_by_track
+        assert related_tracks_by_track == expected_related_tracks_by_track
 
-    def test_two_collections(self, blood_bank_ep, soultrane):
-        """Test fetch_collection_tracks_by_track with two collections to fetch."""
+    def test_two_tracks(self, blood_bank_ep, soultrane):
+        """Test fetch_related_tracks_by_track with two tracks."""
         # Given
-        blood_bank_ep_id = 'BLOOD_BANK_EP_ID'
-        soultrane_id = 'SOULTRANE_ID'
         blood_bank_ep_track_1 = blood_bank_ep[0]
         soultrane_track_1 = soultrane[0]
-        collection_id_by_track = {
-            blood_bank_ep_track_1: blood_bank_ep_id,
-            soultrane_track_1: soultrane_id
-        }
-        collection_type = 'ALBUM'
+        tracks = [blood_bank_ep_track_1, soultrane_track_1]
+        related_by = 'album'
+
         spotify_gateway_mock = Mock()
-        def side_effect(collection_id, collection_type):
-            return set(soultrane if collection_id == soultrane_id else blood_bank_ep)
-        spotify_gateway_mock.fetch_collection_tracks.side_effect = side_effect
+        def side_effect(track, related_by):
+            return set(soultrane if track == soultrane_track_1 else blood_bank_ep)
+        spotify_gateway_mock.fetch_related_tracks.side_effect = side_effect
 
         # When
-        collection_tracks_by_track = SpotifyGateway.fetch_collection_tracks_by_track(
+        related_tracks_by_track = SpotifyGateway.fetch_related_tracks_by_track(
             spotify_gateway_mock,
-            collection_id_by_track,
-            collection_type
+            tracks,
+            related_by
         )
 
         # Then
-        expected_collection_tracks_by_track = {
+        expected_related_tracks_by_track = {
             blood_bank_ep_track_1: set(blood_bank_ep),
             soultrane_track_1: set(soultrane)
         }
-        assert collection_tracks_by_track == expected_collection_tracks_by_track
+        assert related_tracks_by_track == expected_related_tracks_by_track
 
 
 

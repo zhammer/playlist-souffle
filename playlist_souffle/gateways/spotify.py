@@ -36,35 +36,36 @@ class SpotifyGateway:
 
 
     @raise_spotipy_error_as_souffle_error
-    def fetch_collection_tracks(self, collection_id, collection_type):
-        """Fetch a set of Track namedtuples in a collection of collection_type."""
-        if collection_type == 'artist':
-            track_data = self._spotify.artist_top_tracks(collection_id)['tracks']
-            tracks = {pluck_track(track_record, artist=collection_id) for track_record in track_data}
+    def fetch_related_tracks(self, track, related_by):
+        """Fetch a set of Track namedtuples that are related to TRACK by RELATED_BY."""
+        if related_by == 'artist':
+            related_track_data = self._spotify.artist_top_tracks(track.artist)['tracks']
+            related_tracks = {pluck_track(track_record, artist=track.artist)
+                              for track_record in related_track_data}
 
-        elif collection_type == 'album':
-            track_data = self._spotify.album_tracks(collection_id)['items']
-            tracks = {pluck_track(track_record, album=collection_id) for track_record in track_data}
+        elif related_by == 'album':
+            related_track_data = self._spotify.album_tracks(track.album)['items']
+            related_tracks = {pluck_track(track_record, album=track.album)
+                              for track_record in related_track_data}
 
         else:
-            raise SouffleParameterError('Invalid shuffle_by type "{}".'.format(collection_type))
+            raise SouffleParameterError('Invalid shuffle_by type "{}".'.format(related_by))
 
-        return tracks
+        return related_tracks
 
 
     @raise_spotipy_error_as_souffle_error
-    def fetch_collection_tracks_by_track(self, collection_id_by_track, collection_type):
-        """Fetch a collection_tracks_by_collection_track mapping, given a collection_id_by_track
-        mapping and a collection_type.
+    def fetch_related_tracks_by_track(self, tracks, related_by):
+        """Fetch a related_tracks_by_track mapping, where each related_tracks set is the set of
+        tracks related to a track in TRACKS by RELATED_BY.
         """
         with futures.ThreadPoolExecutor(max_workers=20) as executor:
-            collection_tracks_by_collection_id = dict(executor.map(
-                lambda id: (id, self.fetch_collection_tracks(id, collection_type)),
-                collection_id_by_track.values()
+            related_tracks_by_track = dict(executor.map(
+                lambda track: (track, self.fetch_related_tracks(track, related_by)),
+                tracks
             ))
 
-        return {track: collection_tracks_by_collection_id[collection_id]
-                for track, collection_id in collection_id_by_track.items()}
+        return related_tracks_by_track
 
 
     @raise_spotipy_error_as_souffle_error
