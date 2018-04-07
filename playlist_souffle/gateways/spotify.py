@@ -72,9 +72,9 @@ class SpotifyGateway:
         """Create a new playlist for the given Playlist namedtuple.  Return the uri of the new
         playlist.
         """
-        response = self._spotify.user_playlist_create(playlist.owner, playlist.name, is_public)
+        response = self._spotify.user_playlist_create(playlist.user_id, playlist.name, is_public)
         playlist_uri, playlist_id = response['uri'], response['id']
 
         playlist_track_ids = [track.id for track in playlist.tracks]
-        self._spotify.user_playlist_add_tracks(playlist.owner, playlist_id, playlist_track_ids)
+        self._spotify.user_playlist_add_tracks(playlist.user_id, playlist_id, playlist_track_ids)
         return playlist_uri

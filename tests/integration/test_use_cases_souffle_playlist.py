@@ -44,7 +44,7 @@ class TestSoufflePlaylist:
 
         # Then
         expected_playlist = Playlist(
-            owner=user_id,
+            user_id=user_id,
             name='~coding~ [souffle]',
             tracks=[art_tatum_tracks[1], the_xx_tracks[1]],
             description='Souffled from "~coding~" by "artist" at 1968-11-22 09:30:15.'

@@ -9,7 +9,7 @@ def souffle_playlist(spotify, playlist_uri, user_id, shuffle_by):
     """Souffle a playlist."""
 
     original_playlist = Playlist(
-        owner=None,
+        user_id=None,
         name=spotify.fetch_playlist_name(playlist_uri),
         tracks=spotify.fetch_playlist_tracks(playlist_uri),
         description=None

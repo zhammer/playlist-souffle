@@ -2,4 +2,4 @@
 
 from collections import namedtuple
 
-Playlist = namedtuple('Playlist', 'owner name tracks description')
+Playlist = namedtuple('Playlist', 'user_id name tracks description')

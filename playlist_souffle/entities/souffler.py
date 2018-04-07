@@ -22,7 +22,7 @@ def generate_souffled_playlist(original_playlist, user_id, shuffle_by, collectio
         souffle_time
     )
     return Playlist(
-        owner=user_id,
+        user_id=user_id,
         name=souffled_playlist_name,
         tracks=souffled_playlist_tracks,
         description=souffled_playlist_description
