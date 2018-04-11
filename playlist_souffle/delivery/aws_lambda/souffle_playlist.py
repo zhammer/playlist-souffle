@@ -1,4 +1,7 @@
-"""AWS lambda function for shuffling a playlist's tracks by artist or album."""
+"""AWS lambda function for shuffling a playlist's tracks by artist or album.
+
+TODO: Cleanup delivery functions.
+"""
 
 import logging
 from urllib.parse import parse_qs

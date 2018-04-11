@@ -1,8 +1,9 @@
 """Module for custom Souffle exceptions.
 
 Available classes:
-- SouffleException: Base class for custom exceptions emitted by Souffle.
+- SouffleException: Base class for custom exceptions emitted by playlist_souffle.
 - SouffleParameterError: Error raised if a parameter provided to Souffle is invalid.
+- SouffleSpotifyError: Error raised if there is an error with the spotify web api.
 """
 
 import attr
@@ -13,7 +14,7 @@ class SouffleException(Exception):
 
 
 class SouffleParameterError(SouffleException):
-    """Custom error raised if an ingredient (parameter) to the souffle is invalid."""
+    """Custom error raised if a parameter to the souffle is invalid."""
 
 
 @attr.s

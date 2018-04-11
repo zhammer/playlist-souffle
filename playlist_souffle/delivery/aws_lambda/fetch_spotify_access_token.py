@@ -1,4 +1,7 @@
-"""AWS lambda function for obtaining a spotify access token given a spotify refresh token."""
+"""AWS lambda function for obtaining a spotify access token given a spotify refresh token.
+
+TODO: Cleanup delivery functions.
+"""
 
 import logging
 import os

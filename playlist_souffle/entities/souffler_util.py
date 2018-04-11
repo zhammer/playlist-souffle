@@ -1,11 +1,15 @@
-"""Module for souffler entity util functions"""
+"""Module for souffler entity util functions.
+
+Available functions:
+- generate_souffle_description: Generate a description for a souffled playlist.
+- generate_souffle_name: Generate a name for a souffled playlist given its original name.
+- souffle_tracks: Souffle a list of tracks, swapping out each track for a related track.
+"""
 
 import random
 import re
 
 SOUFFLE_NAME_RE = r'(?P<playlist_name>.*)\[souffle(?:\^(?P<souffle_degree>\d+))?\]$'
-SOUFFLE_NAME_NO_DEGREE_FMT = '{} [souffle]'
-SOUFFLE_NAME_DEGREE_FMT = '{} [souffle^{}]'
 SOUFFLE_DESCRIPTION_FMT = 'Souffled from "{original_name}" by "{shuffle_by}" at {time_of_souffle}.'
 
 
@@ -44,25 +48,28 @@ def generate_souffle_name(original_name):
     match = re.match(SOUFFLE_NAME_RE, original_name)
 
     if not match:
-        return SOUFFLE_NAME_NO_DEGREE_FMT.format(original_name.rstrip())
+        return '{} [souffle]'.format(original_name.rstrip())
 
     playlist_name = match.group('playlist_name').rstrip()
     souffle_degree = int(match.group('souffle_degree') or 1)
 
-    return SOUFFLE_NAME_DEGREE_FMT.format(playlist_name, souffle_degree + 1)
+    return '{} [souffle^{}]'.format(playlist_name, souffle_degree + 1)
 
 
-def souffle_tracks(tracks, collection_tracks_by_track):
-    """Souffle a list of tracks, swapping out each track for another track on its collection,
-    using collection_tracks_by_track: a dict mapping tracks in 'tracks' to the set of tracks in
-    their collections.
+def souffle_tracks(tracks, related_tracks_by_track):
+    """Souffle a list of tracks, swapping out each track for one of its related tracks based on the
+    related_tracks_by_track mapping, given that the related track isn't in the original tracks and
+    hasn't already been swapped to in the souffle_tracks operation.
+
+    If there are no swappable tracks for a track -- meaning that all related tracks are either in
+    the input tracks list or have already been swapped to -- the track will be swapped with itself.
     """
     tracks_set = set(tracks)
     souffled_tracks = []
     for track in tracks:
-        collection_tracks = collection_tracks_by_track[track]
-        valid_tracks = collection_tracks - tracks_set - set(souffled_tracks)
-        souffled_track = random.sample(valid_tracks, 1)[0] if valid_tracks else track
+        related_tracks = related_tracks_by_track[track]
+        swappable_tracks = related_tracks - tracks_set - set(souffled_tracks)
+        souffled_track = random.sample(swappable_tracks, 1)[0] if swappable_tracks else track
         souffled_tracks.append(souffled_track)
 
     return souffled_tracks

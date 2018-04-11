@@ -1,4 +1,4 @@
-"""Module for util functions in the playlist souffle service.
+"""Module containing AWS delivery util functions.
 
 Available functions:
 - decrypt_kms_string: Decrypt a kms-encrypted string.

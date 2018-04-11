@@ -1,4 +1,8 @@
-"""Module for spotify gateway"""
+"""Module for the spotify gateway.
+
+Available classes:
+- SpotifyGateway: Gateway class for interfacing with the spotify web api.
+"""
 
 from concurrent import futures
 from spotipy import Spotify
@@ -14,7 +18,14 @@ from playlist_souffle.gateways.spotify_util import (
 
 
 class SpotifyGateway:
-    """Class implementing spotify gateway."""
+    """Class implementing a gateway to the spotify web api.
+
+    Available functions:
+    - fetch_playlist: Fetch a Playlist namedtuple given a playlist_uri.
+    - fetch_related_tracks: Fetch a track's related tracks by artist or album.
+    - fetch_related_tracks_by_track: Concurrently fetch a mapping of tracks to their related tracks.
+    - create_playlist: Create a playlist for a user[]
+    """
 
     @raise_spotipy_error_as_souffle_error
     def __init__(self, access_token):

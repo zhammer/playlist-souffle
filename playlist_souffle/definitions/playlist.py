@@ -1,4 +1,4 @@
-"""Module for defining the Playlist namedtuple"""
+"""Module for defining the Playlist namedtuple."""
 
 from collections import namedtuple
 

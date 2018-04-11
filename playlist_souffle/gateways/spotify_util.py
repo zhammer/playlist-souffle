@@ -1,4 +1,15 @@
-"""Module for spotify gateway util functions"""
+"""Module for spotify gateway util functions.
+
+Available decorators:
+- raise_spotipy_error_as_souffle_error: Re-raise spotipy.SpotifyErrors as SouffleSpotifyErrors.
+
+Available functions:
+- extract_playlist_uri_components: Extract the user_id and playlist_id of a spotify playlist uri.
+- fetch_playlist_metadata: Fetch the name and description of a spotify playlist.
+- fetch_playlist_track_data: Fetch a list of raw spotify web api track objects of a playlist.
+- pluck_track: Pluck a Track namedtuple froma raw spotify web api track object.
+
+"""
 
 import functools
 import spotipy
@@ -10,7 +21,9 @@ SPOTIFY_PLAYLIST_TRACK_FIELDS = 'items(track(id, artists.id, album.id))'
 
 
 def raise_spotipy_error_as_souffle_error(func):
-    """Decorator that raises spotipy Spotify errors as souffle Spotify errors."""
+    """Decorator that catches `SpotifyError`s eminating from the spotipy library in a decorated
+    function and re-raises them as `SouffleSpotifyError`s.
+    """
     @functools.wraps(func)
     def inner(*args, **kwargs):
         try:

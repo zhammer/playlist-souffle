@@ -1,5 +1,8 @@
 """AWS lambda function for obtaining a spotify refresh token (and access token) given a spotify
-authorization token."""
+authorization token.
+
+TODO: Cleanup delivery functions.
+"""
 
 
 import logging

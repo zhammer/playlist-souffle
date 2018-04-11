@@ -1,4 +1,9 @@
-"""Module for souffler entity."""
+"""Module for souffler entity.
+
+Available functions:
+- generate_souffled_playlist: Generate a souffled version of a Playlist namedtuple given a map of
+  related_tracks_by_track for souffleing and other metadata.
+"""
 
 from playlist_souffle.definitions.playlist import Playlist
 from playlist_souffle.entities.souffler_util import (
@@ -8,8 +13,9 @@ from playlist_souffle.entities.souffler_util import (
 )
 
 def generate_souffled_playlist(original_playlist, user_id, shuffle_by, related_tracks_by_track, souffle_time):
-    """Generate a souffled playlist given a Playlist namedtuple of the original playlist and a
-    related_tracks_by_track mapping for souffleing. Returns a Playlist namedtuple.
+    """Given an original playlist, create a new playlist in which each track from the original
+    playlist is swapped with one of its related tracks based on the related_tracks_by_track mapping.
+    A 'souffled' name and description will be generated for the new playlist.
     """
     souffled_playlist_tracks = souffle_tracks(
         original_playlist.tracks,
