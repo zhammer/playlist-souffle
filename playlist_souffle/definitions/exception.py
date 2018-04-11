@@ -21,3 +21,12 @@ class SouffleSpotifyError(SouffleException):
     """Custom error raised on errors with the spotify web api."""
     http_status = attr.ib()
     message = attr.ib()
+
+    def __str__(self):
+        """Stringify a SouffleSpotifyError.
+
+        >>> e = SouffleSpotifyError(http_status=401, message='Authorization failed!')
+        >>> str(e)
+        '401: Authorization failed!'
+        """
+        return '{http_status}: {message}'.format(**self.__dict__)
