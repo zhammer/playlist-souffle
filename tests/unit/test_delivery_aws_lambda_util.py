@@ -1,7 +1,7 @@
-"""Test module for souffle package."""
+"""Unit test module for playlist_souffle.delivery.aws_lambda.util."""
 
 import pytest
-from souffle.util import (
+from playlist_souffle.delivery.aws_lambda.util import (
     extract_bearer_token,
     extract_bearer_token_from_api_event,
     generate_api_gateway_response

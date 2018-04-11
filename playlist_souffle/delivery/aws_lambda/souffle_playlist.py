@@ -1,28 +1,34 @@
-"""AWS lambda function for shuffling a playlist's tracks by artist or album."""
+"""AWS lambda function for shuffling a playlist's tracks by artist or album.
+
+TODO: Cleanup delivery functions.
+"""
 
 import logging
 from urllib.parse import parse_qs
-from spotipy import Spotify, SpotifyException
-from souffle.exception import SouffleParameterError
-from souffle.shuffle import souffle_playlist
-from souffle.util import extract_bearer_token_from_api_event, generate_api_gateway_response
+from playlist_souffle.definitions.exception import SouffleParameterError, SouffleSpotifyError
+from playlist_souffle.gateways.spotify import SpotifyGateway
+from playlist_souffle.use_cases.souffle_playlist import souffle_playlist
+from playlist_souffle.delivery.aws_lambda.util import (
+    extract_bearer_token_from_api_event,
+    generate_api_gateway_response
+)
 
 logger = logging.getLogger(__name__)
 
 def generate_spotify_exception_response(exception):
     """Generate an api gateway response based on a spotify exception."""
-    if exception.code == 401:
-        return generate_api_gateway_response(401, body={'message':exception.msg})
+    if exception.http_status == 401:
+        return generate_api_gateway_response(401, body={'message': exception.message})
     else:
         return generate_api_gateway_response(
             500,
             body={
-                'message':'Encountered Spotify api error. Message: "{}".'.format(exception.msg)
+                'message':'Encountered Spotify api error. Message: "{}".'.format(exception.message)
             }
         )
 
 
-def main(event, context):
+def handler(event, context):
     """AWS lambda event handler"""
 
     logger.debug('Handling event "%s". Context: "%s"', event, context)
@@ -52,17 +58,17 @@ def main(event, context):
 
     # Setup spotipy client
     try:
-        spotify = Spotify(access_token)
-    except SpotifyException as e:
+        spotify = SpotifyGateway(access_token)
+    except SouffleSpotifyError as e:
         return generate_spotify_exception_response(e)
 
 
     # Souffle playlist
     try:
-        souffled_playlist_uri = souffle_playlist(playlist_uri, shuffle_by, user_id, spotify)
+        souffled_playlist_uri = souffle_playlist(spotify, user_id, playlist_uri, shuffle_by)
     except SouffleParameterError as e:
         return generate_api_gateway_response(400, body={'message': e})
-    except SpotifyException as e:
+    except SouffleSpotifyError as e:
         return generate_spotify_exception_response(e)
     # except Exception as e:
     #     logger.error('Unexpected exception: "{}".'.format(e))

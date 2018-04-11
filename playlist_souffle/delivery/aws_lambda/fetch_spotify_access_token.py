@@ -1,13 +1,16 @@
-"""AWS lambda function for obtaining a spotify access token given a spotify refresh token."""
+"""AWS lambda function for obtaining a spotify access token given a spotify refresh token.
+
+TODO: Cleanup delivery functions.
+"""
 
 import logging
 import os
 import requests
-from souffle.util import (
+from playlist_souffle.delivery.aws_lambda.util import (
     decrypt_kms_string,
     extract_bearer_token_from_api_event,
     generate_api_gateway_response
-    )
+)
 
 
 SPOTIFY_ACCESS_TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'
@@ -59,7 +62,7 @@ def fetch_spotify_access_token(refresh_token, client_id, client_secret):
     return access_token
 
 
-def main(event, context):
+def handler(event, context):
     """AWS lambda event handler"""
 
     logger.debug('Handling event "%s". Context: "%s"', event, context)

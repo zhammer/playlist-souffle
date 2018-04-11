@@ -13,12 +13,12 @@ provider:
 
 package:
   include:
-    - souffle/**
+    - playlist_souffle/**
 
 functions:
   fetch-spotify-access-token:
     description: Obtain a spotify access token given a spotify refresh token
-    handler: fetch-spotify-access-token/handler.main
+    handler: playlist_souffle/delivery/aws_lambda/fetch_spotify_access_token.handler
     environment:
       SPOTIFY_CLIENT_ID: ${self:custom.spotifyClientId}
       SPOTIFY_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_SECRET}
@@ -30,7 +30,7 @@ functions:
 
   fetch-spotify-refresh-token:
     description: Obtain a spotify refresh token given a spotify auth token
-    handler: fetch-spotify-refresh-token/handler.main
+    handler: playlist_souffle/delivery/aws_lambda/fetch_spotify_refresh_token.handler
     environment:
       SPOTIFY_CLIENT_ID: ${self:custom.spotifyClientId}
       SPOTIFY_CLIENT_SECRET: ${self:custom.kmsSecrets.secrets.SPOTIFY_CLIENT_SECRET}
@@ -40,9 +40,9 @@ functions:
           method: post # to match POST https://accounts.spotify.com/api/token
           cors: true
 
-  shuffle-playlist:
+  souffle-playlist:
     description: Shuffle a playlists tracks by artist or album
-    handler: shuffle-playlist/handler.main
+    handler: playlist_souffle/delivery/aws_lambda/souffle_playlist.handler
     events:
       - http:
           path: /souffle
