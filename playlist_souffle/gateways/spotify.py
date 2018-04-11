@@ -3,8 +3,10 @@
 from concurrent import futures
 from spotipy import Spotify
 from playlist_souffle.definitions.exception import SouffleParameterError
+from playlist_souffle.definitions.playlist import Playlist
 from playlist_souffle.gateways.spotify_util import (
     extract_playlist_uri_components,
+    fetch_playlist_metadata,
     fetch_playlist_track_data,
     pluck_track,
     raise_spotipy_error_as_souffle_error
@@ -21,18 +23,20 @@ class SpotifyGateway:
 
 
     @raise_spotipy_error_as_souffle_error
-    def fetch_playlist_tracks(self, playlist_uri):
-        """Fetch the tracks of a playlist as a list of Track namedtuples."""
-        playlist_owner_id, playlist_id = extract_playlist_uri_components(playlist_uri)
-        playlist_track_data = fetch_playlist_track_data(self._spotify, playlist_owner_id, playlist_id)
-        return [pluck_track(track_record) for track_record in playlist_track_data]
+    def fetch_playlist(self, playlist_uri):
+        """Fetch a Playlist namedtuple representation of a spotify playlist given a playlist_uri."""
+        user_id, playlist_id = extract_playlist_uri_components(playlist_uri)
 
+        name, description = fetch_playlist_metadata(self._spotify, user_id, playlist_id)
+        track_data = fetch_playlist_track_data(self._spotify, user_id, playlist_id)
+        tracks = [pluck_track(track_record) for track_record in track_data]
 
-    @raise_spotipy_error_as_souffle_error
-    def fetch_playlist_name(self, playlist_uri):
-        """Fetch the name of a playlist from spotify."""
-        playlist_owner_id, playlist_id = extract_playlist_uri_components(playlist_uri)
-        return self._spotify.user_playlist(playlist_owner_id, playlist_id, fields='name')['name']
+        return Playlist(
+            user_id=user_id,
+            name=name,
+            tracks=tracks,
+            description=description
+        )
 
 
     @raise_spotipy_error_as_souffle_error

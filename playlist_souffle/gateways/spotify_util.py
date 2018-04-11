@@ -5,7 +5,8 @@ import spotipy
 from playlist_souffle.definitions.track import Track
 from playlist_souffle.definitions.exception import SouffleParameterError, SouffleSpotifyError
 
-SPOTIFY_PLAYLIST_FIELDS = 'items(track(id, artists.id, album.id))'
+SPOTIFY_PLAYLIST_METADATA_FIELDS = 'name, description'
+SPOTIFY_PLAYLIST_TRACK_FIELDS = 'items(track(id, artists.id, album.id))'
 
 
 def raise_spotipy_error_as_souffle_error(func):
@@ -52,6 +53,17 @@ def pluck_track(track_record, artist=None, album=None):
     )
 
 
+def fetch_playlist_metadata(spotify, user_id, playlist_id):
+    """Fetch the name and description of a spotify playlist given its user_id and playlist_id."""
+    response = spotify.user_playlist(
+        user_id,
+        playlist_id,
+        fields=SPOTIFY_PLAYLIST_METADATA_FIELDS
+    )
+
+    return response['name'], response['description']
+
+
 def fetch_playlist_track_data(spotify, user_id, playlist_id):
     """Fetch a list of spotify api track objects as raw data. Only fetch the track.id,
     track.artists.id, and track.album.id fields.
@@ -60,6 +72,6 @@ def fetch_playlist_track_data(spotify, user_id, playlist_id):
     response = spotify.user_playlist_tracks(
         user_id,
         playlist_id,
-        fields=SPOTIFY_PLAYLIST_FIELDS
+        fields=SPOTIFY_PLAYLIST_TRACK_FIELDS
     )
     return [item['track'] for item in response['items']]

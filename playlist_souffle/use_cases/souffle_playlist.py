@@ -7,12 +7,7 @@ import playlist_souffle.entities.souffler as souffler_entity
 def souffle_playlist(spotify, user_id, playlist_uri, shuffle_by):
     """Souffle a playlist."""
 
-    original_playlist = Playlist(
-        user_id=None,
-        name=spotify.fetch_playlist_name(playlist_uri),
-        tracks=spotify.fetch_playlist_tracks(playlist_uri),
-        description=None
-    )
+    original_playlist = spotify.fetch_playlist(playlist_uri)
 
     related_tracks_by_track = spotify.fetch_related_tracks_by_track(
         original_playlist.tracks,
