@@ -1,0 +1,147 @@
+openapi: 3.0.0
+servers:
+  - url: 'https://wumxvuo5nb.execute-api.us-east-1.amazonaws.com/dev'
+info:
+  description: >
+    Souffle up your playlists, swapping out each track for another track by the
+    same artist or on the same album.
+  version: "1.0.0-oas3"
+  title: Playlist Souffle
+  contact:
+    email: zach.the.hammer@gmail.com
+  license:
+    name: MIT License
+    url: 'https://opensource.org/licenses/MIT'
+tags:
+  - name: Authorization
+    description: Endpoints for Playlist Souffle\'s Spotify authorization flow.
+  - name: Use cases
+    description: Endpoints for Playlist Souffle\'s use cases.
+paths:
+  /refreshtoken:
+    post:
+      tags:
+        - Authorization
+      summary: Get a spotify refreshtoken and accesstoken given an authorization code.
+      security:
+        - authorizationCode: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                redirectUri:
+                  type: string
+                  description: >
+                    `redirectUri` used in `accounts.spotify.com/authorize` endpoint when fetching `authorizationCode`.
+              example:
+                redirectUri: https://127.0.0.1:8100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accesstoken:
+                    type: string
+                    description: Access token for the spotify web api
+        '400':
+          $ref: '#/components/responses/UnauthorizedError'
+  /accesstoken:
+    post:
+      tags:
+        - Authorization
+      summary: Get a spotify accesstoken given a valid refreshtoken.
+      security:
+        - refreshToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refreshtoken:
+                    type: string
+                    description: Refresh token for use with the `/accesstoken` endpoint.
+                  accesstoken:
+                    type: string
+                    description: Access token for the spotify web api
+        '400':
+          $ref: '#/components/responses/UnauthorizedError'
+  /souffle:
+    post:
+      tags:
+      - Use cases
+      summary: >
+        Souffle a playlist. The generated playlist will be created on
+        the current user's account.
+      security:
+        - accessToken: []
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                playlistUri:
+                  type: string
+                  description: Uri of the playlist to be souffled.
+                userId:
+                  type: string
+                  description: >
+                    Id of the current user on whose account the souffle
+                    playlist will be created.
+                shuffleBy:
+                  type: string
+                  description: Type of collection to shuffle by.
+                  enum: [artist, album]
+              example:
+                playlistUri: spotify:user:zachthehammer:playlist:5u1XuTMnpZqhAfkYob8X6U
+                userId: zachthehammer
+                shuffleBy: album
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              schema:
+                type: string
+                description: Uri of souffled playlist.
+        '400':
+          $ref: '#/components/responses/UnauthorizedError'
+
+
+components:
+  responses:
+    UnauthorizedError:
+      description: Bearer token is missing or invalid.
+  securitySchemes:
+    authorizationCode:
+      description: >
+        Obtain an authorization code by visiting the spotify [/authorize](https://accounts.spotify.com/authorize?client_id=b231329aba1a4c539375436a267db917&response_type=code&redirect_uri=https://127.0.0.1:8100&scope=playlist-read-private%20playlist-modify-private%20playlist-modify-public) page. Browser will redirect to an unreachable url `https://127.0.0.1:8100/?code={AUTHORIZATION_CODE}` from which the `AUTHORIZATION_CODE` can be extracted. An authorization code
+        can only be used once as a Bearer token to the `/refreshtoken` endpoint.
+      type: http
+      scheme: bearer
+    refreshToken:
+      description: >
+        A Spotify refreshtoken that can be used to fetch a fresh accesstoken.
+        (Obtained via the `/refreshtoken` endpoint.)
+      type: http
+      scheme: bearer
+    accessToken:
+      description: >
+        A Spotify accesstoken used as a Bearer token for all requests to the
+        Spotify and Playlist Souffle APIs. (Obtained initially via the
+        `/refreshtoken` endpoint and refreshed via the `/accesstoken` endpoint.)
+      type: http
+      scheme: bearer
+externalDocs:
+  description: Visit the github page
+  url: 'https://github.com/zhammer/playlist-souffle'
