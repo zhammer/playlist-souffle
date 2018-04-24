@@ -7,37 +7,7 @@ Before souffle              |  After souffle (by album)
 
 ### REST API
 
-##### ```/refreshtoken``` POST
-* Obtain a spotify refresh token and access token given a valid spotify authorization code
-* Request
-    * Headers:
-        * ```Authorization: Bearer {AUTHORIZATION_CODE}```
-* Response (200)
-    * Body (application/json)
-        * ```accessToken```: spotify access token
-        * ```refreshToken```: spotify refresh token
-
-##### ```/accesstoken``` POST
-* Obtain a fresh spotify access token given a valid spotify refreshtoken
-* Request
-    * Headers:
-        * ```Authorization: Bearer {REFRESH_TOKEN}```
-* Response (200)
-    * Body (application/json)
-        * ```accessToken```: spotify access token
-
-##### ```/souffle``` POST
-* Create a souffle'd playlist from an original playlist in which each track on the souffle'd playlist is swapped with another song on the same album or by the same artist.
-* Request
-    * Headers:
-        * ```Authorization: Bearer {ACCESS_TOKEN}```
-    * Body (application/x-www-form-urlencoded)
-        * ```playlistUri```: uri of the playlist to souffle
-        * ```userId```: id of current user under whose account souffled playlist will be created
-        * ```shuffleBy```: type of collection to shuffle by (```artist``` or ```album```)
-* Response (201)
-    * Headers:
-        * ```Location: {SOUFFLED_PLAYLIST_URI}```
+Check out the API documentation on [swagger](https://app.swaggerhub.com/apis/zhammer/playlist-souffle/1.0.0-oas3).
 
 ### Setting up virtual environment
 ```bash
@@ -47,7 +17,7 @@ virtualenv venv --python=python3
 # Enter venv
 source venv/bin/activate
 
-# Install 
+# Install
 pip install -r requirements.txt
 ```
 
