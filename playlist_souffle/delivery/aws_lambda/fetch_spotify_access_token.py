@@ -93,5 +93,9 @@ def handler(event, context):
     # Return access token with 200 OK status code.
     return generate_api_gateway_response(
         200,
+        headers={
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': True
+        },
         body={'accessToken':access_token}
     )

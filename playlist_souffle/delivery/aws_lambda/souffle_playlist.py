@@ -75,4 +75,9 @@ def handler(event, context):
     #     return generate_api_gateway_response(500)
 
     # Return success
-    return generate_api_gateway_response(201, headers={'Location': souffled_playlist_uri})
+    headers = {
+        'Location': souffled_playlist_uri,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': True
+    }
+    return generate_api_gateway_response(201, headers=headers)

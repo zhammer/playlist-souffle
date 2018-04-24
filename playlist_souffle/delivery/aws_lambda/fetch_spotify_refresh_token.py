@@ -115,6 +115,10 @@ def handler(event, context):
     # Return refresh and access tokens with 200 OK status code.
     return generate_api_gateway_response(
         200,
+        headers={
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': True
+        },
         body={
             'refreshToken':refresh_token,
             'accessToken':access_token
