@@ -49,6 +49,9 @@ paths:
               schema:
                 type: object
                 properties:
+                  refreshtoken:
+                    type: string
+                    description: Refresh token for use with the `/accesstoken` endpoint.
                   accesstoken:
                     type: string
                     description: Access token for the spotify web api
@@ -69,9 +72,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  refreshtoken:
-                    type: string
-                    description: Refresh token for use with the `/accesstoken` endpoint.
                   accesstoken:
                     type: string
                     description: Access token for the spotify web api
@@ -114,9 +114,9 @@ paths:
           description: Created
           headers:
             Location:
+              description: Uri of souffled playlist.
               schema:
                 type: string
-                description: Uri of souffled playlist.
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
