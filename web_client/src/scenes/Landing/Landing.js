@@ -29,14 +29,14 @@ const ButtonContainer = styled('div')`
   }
 `;
 
-const Landing = () => (
+const Landing = ({ onLoginButtonClicked }) => (
   <div className="Landing">
     <StyledH1>Playlist Souffle</StyledH1>
     <UnderlinedH3><YellowOnHover>Souffle</YellowOnHover> up your playlists</UnderlinedH3>
     <StyledH4>Swap out each track with another track on the same album or by the same artist.</StyledH4>
     <SouffleHero />
     <ButtonContainer>
-      <SpotifyButton>Login</SpotifyButton>
+      <SpotifyButton onClick={onLoginButtonClicked}>Login</SpotifyButton>
     </ButtonContainer>
   </div>
 );
