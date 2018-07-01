@@ -27,6 +27,18 @@ export async function fetchRefreshToken (authCode) {
   return { refreshToken, accessToken };
 }
 
+export async function fetchAccessToken (refreshToken) {
+
+  const response = await request.post(BASE_URL + '/accesstoken')
+        .set('Authorization', 'Bearer ' + refreshToken);
+
+  if (response.status !== 200) {
+    throw response.body;
+  }
+
+  return response.body.accessToken;
+}
+
 
 const SPOTIFY_URL = 'https://api.spotify.com/v1';
 

@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { injectGlobal } from 'emotion';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { devToolsEnhancer } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import App from './App';
