@@ -20,8 +20,10 @@ export const fetchAccessTokenSucceeded = (accessToken) => ({
 
 
 export const handleAuthCodeReceived = authCode => dispatch => {
-  console.log(authCode);
   fetchRefreshToken(authCode)
-    .then(({ refreshToken, accessToken }) => dispatch(fetchRefreshTokenSucceeded(refreshToken, accessToken)))
+    .then(({ refreshToken, accessToken }) => {
+      dispatch(fetchRefreshTokenSucceeded(refreshToken, accessToken));
+      localStorage.setItem('refreshToken', refreshToken);
+    })
     .catch(error => alert(error));
 };

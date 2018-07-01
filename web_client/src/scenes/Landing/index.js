@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import connectRouter from './components/connectRouter';
+import { Redirect } from 'react-router';
 import Landing from './Landing';
+import { getAccessToken } from 'selectors';
 import { handleAuthCodeReceived } from 'actions/auth';
 import { redirectToAuthorizationPage } from 'services/api';
 
@@ -15,7 +17,9 @@ class LandingContainer extends Component {
   }
 
   render = () => (
-    <Landing onLoginButtonClicked={e => {e.preventDefault(); redirectToAuthorizationPage();}} />
+    this.props.accessToken
+      ? <Redirect to='/playlists'/>
+      : <Landing onLoginButtonClicked={e => {e.preventDefault(); redirectToAuthorizationPage();}} />
   );
 }
 
@@ -26,7 +30,12 @@ const mapQueryParamsToProps = ({ code }) => ({
 
 const ConnectedToRouter = connectRouter(mapQueryParamsToProps)(LandingContainer);
 
-const mapStateToProps = (state, props) => ({ ...props });
+const mapStateToProps = (state, props) => (
+  {
+    accessToken: getAccessToken(state),
+    ...props
+  }
+);
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
