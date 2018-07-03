@@ -2,13 +2,10 @@ import React from 'react';
 import styled, { css } from 'react-emotion';
 import withIsolationHoverStyles from 'components/withIsolationHoverStyles';
 import { StyledH3 } from 'components/headers';
+import { TileGrid } from 'components/TileGrid';
 import Playlist from './components/Playlist';
 
-// TODO: Move the tiling grid (Playlists) and tile (Playlist) components to top-level components.
-const Container = styled('div')`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(20em, 1fr));
-  grid-auto-rows: 1fr;
+const PlaylistsTileGrid = styled(TileGrid)`
   width: 60%;
   min-width: 20em;
   margin: 0 auto;
@@ -27,12 +24,8 @@ const transitionStyle = css`
   transition: all .5s ease-out;
 `;
 
-const {
-  StyledParentComponent: StyledContainer,
-  StyledChildComponent: StyledPlaylist
-} = withIsolationHoverStyles(
-  Container,
-  Playlist,
+const PlaylistsTileGridWithHoverIsolation = withIsolationHoverStyles(
+  PlaylistsTileGrid,
   hoveredStyle,
   ignoredStyle,
   transitionStyle
@@ -40,11 +33,11 @@ const {
 
 
 const Playlists = ({ playlists }) => (
-  <StyledContainer>
+  <PlaylistsTileGridWithHoverIsolation>
     {playlists.map((playlist, index) => (
-      <StyledPlaylist key={index} name={playlist.name} />
+      <Playlist key={index} name={playlist.name} />
     ))}
-  </StyledContainer>
+  </PlaylistsTileGridWithHoverIsolation>
 );
 
 export default Playlists;

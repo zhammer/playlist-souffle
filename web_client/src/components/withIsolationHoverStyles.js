@@ -2,7 +2,6 @@ import styled, { css } from 'react-emotion';
 
 const withIsolationHoverStyles = (
   ParentComponent,
-  ChildComponent,
   childHoveredStyle,
   childIgnoredStyle,
   transitionStyle=css`transition: all .5s ease-out;`
@@ -17,15 +16,13 @@ const withIsolationHoverStyles = (
     &:hover > * {
       ${childIgnoredStyle}
     }
-  `;
 
-  const StyledChildComponent = styled(ChildComponent)`
-    &:hover {
+    &:hover > *:hover {
       ${childHoveredStyle}
     }
   `;
 
-  return { StyledParentComponent, StyledChildComponent };
+  return StyledParentComponent;
 };
 
 

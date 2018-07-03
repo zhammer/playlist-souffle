@@ -5,14 +5,14 @@ import { getAccessToken } from 'selectors';
 import { fetchPlaylists } from 'services/api';
 import { handlePlaylistsPageLoaded } from './actions';
 import { getPlaylists, getPlaylistsPageLoading } from './selectors';
-import Playlists from './Playlists';
+import PlaylistsGrid from './PlaylistsGrid';
 
 class PlaylistsContainer extends Component {
   componentDidMount = () => {
     this.props.onPlaylistsPageLoaded();
   }
 
-  render = () => (<Playlists playlists={this.props.playlists}/>)
+  render = () => (<PlaylistsGrid playlists={this.props.playlists}/>)
 }
 
 

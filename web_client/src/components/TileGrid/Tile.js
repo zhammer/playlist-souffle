@@ -1,9 +1,7 @@
-import React from 'react';
-import styled, { css } from 'react-emotion';
-import { StyledH4 } from 'components/headers';
+import styled from 'react-emotion';
 import colors from 'theme';
 
-const Container = styled('div')`
+const Tile = styled('div')`
   background-color: ${colors.opaqueWhite};
   display: flex;
   justify-content: center;
@@ -23,10 +21,4 @@ const Container = styled('div')`
   }
 `;
 
-const Playlist = ({ name, className }) => (
-  <Container className={className}>
-    <StyledH4 className={css`margin: .5em;`}>{name}</StyledH4>
-  </Container>
-);
-
-export default Playlist;
+export default Tile;
