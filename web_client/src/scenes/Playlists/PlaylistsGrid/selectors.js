@@ -1,8 +1,5 @@
 import { createSelector } from 'reselect';
-import { getFetchingAccessToken } from 'selectors';
-
-export const getPlaylists = state => Object.values(state.playlists.playlists);
-export const getFetchingPlaylists = state => state.playlists.fetchingPlaylists;
+import { getFetchingAccessToken, getFetchingPlaylists } from 'selectors';
 
 export const getPlaylistsPageLoading = createSelector(
   [getFetchingAccessToken, getFetchingPlaylists],

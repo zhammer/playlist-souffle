@@ -35,3 +35,7 @@ export const handlePlaylistsPageLoaded = () => (dispatch, getState) => {
     .then(playlists => dispatch(fetchPlaylistsSucceeded(playlists)))
     .catch(err => console.log(err)); // Should clear accesstoken
 };
+
+export const handlePlaylistSelected = playlist => dispatch => {
+  console.log(playlist);
+};

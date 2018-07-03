@@ -5,12 +5,14 @@ import { bindActionCreators } from 'redux';
 import { handleApplicationStarted } from 'actions/app';
 import Landing from 'scenes/Landing';
 import Playlists from 'scenes/Playlists';
+import SouffleStation from 'scenes/SouffleStation';
 
 const App = () => (
   <Router>
     <Fragment>
       <Route path='/' exact component={Landing}/>
-      <Route path='/playlists' component={Playlists}/>
+      <Route path='/playlists' exact component={Playlists}/>
+      <Route path='/playlists/:id' component={SouffleStation}/>
     </Fragment>
   </Router>
 );

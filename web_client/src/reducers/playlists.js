@@ -1,4 +1,4 @@
-import { FETCH_PLAYLISTS_STARTED, FETCH_PLAYLISTS_SUCCEEDED } from './actions';
+import { FETCH_PLAYLISTS_STARTED, FETCH_PLAYLISTS_SUCCEEDED } from 'actions/playlists';
 
 const initialState = {
   playlists: {},

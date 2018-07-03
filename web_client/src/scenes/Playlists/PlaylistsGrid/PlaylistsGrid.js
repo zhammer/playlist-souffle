@@ -2,12 +2,13 @@ import React from 'react';
 import styled, { css } from 'react-emotion';
 import withIsolationHoverStyles from 'components/withIsolationHoverStyles';
 import { TileGrid } from 'components/TileGrid';
-import Playlist from './components/Playlist';
+import PlaylistTile from './components/PlaylistTile';
 
 const PlaylistsTileGrid = styled(TileGrid)`
   width: 60%;
   min-width: 20em;
   margin: 0 auto;
+  margin-bottom: 2em;
 `;
 
 const hoveredStyle = css`
@@ -31,10 +32,14 @@ const PlaylistsTileGridWithHoverIsolation = withIsolationHoverStyles(
 );
 
 
-const Playlists = ({ playlists }) => (
+const Playlists = ({ playlists, onPlaylistSelected }) => (
   <PlaylistsTileGridWithHoverIsolation>
     {playlists.map((playlist, index) => (
-      <Playlist key={index} name={playlist.name} />
+      <PlaylistTile
+        key={index}
+        name={playlist.name}
+        onClick={() => onPlaylistSelected(playlist)}
+        />
     ))}
   </PlaylistsTileGridWithHoverIsolation>
 );
