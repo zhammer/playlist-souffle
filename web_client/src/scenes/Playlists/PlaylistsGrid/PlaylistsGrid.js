@@ -1,7 +1,6 @@
 import React from 'react';
 import styled, { css } from 'react-emotion';
 import withIsolationHoverStyles from 'components/withIsolationHoverStyles';
-import { StyledH3 } from 'components/headers';
 import { TileGrid } from 'components/TileGrid';
 import Playlist from './components/Playlist';
 

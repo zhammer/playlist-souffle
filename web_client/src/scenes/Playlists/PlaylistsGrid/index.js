@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getAccessToken } from 'selectors';
-import { fetchPlaylists } from 'services/api';
 import { handlePlaylistsPageLoaded } from './actions';
 import { getPlaylists, getPlaylistsPageLoading } from './selectors';
 import PlaylistsGrid from './PlaylistsGrid';

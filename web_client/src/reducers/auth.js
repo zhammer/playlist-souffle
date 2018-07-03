@@ -15,7 +15,7 @@ const initialState = {
 const auth = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_REFRESH_TOKEN_SUCCEEDED: {
-      const { refreshToken, accessToken } = action.payload;
+      const { refreshToken } = action.payload;
       return {
         ...state,
         refreshToken,
