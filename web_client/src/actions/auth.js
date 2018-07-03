@@ -1,4 +1,8 @@
-import { fetchRefreshToken } from 'services/api';
+import { fetchRefreshToken, fetchPlaylists } from 'services/api';
+import {
+  fetchPlaylistsStarted,
+  fetchPlaylistsSucceeded
+} from 'actions/playlists';
 
 export const FETCH_REFRESH_TOKEN_SUCCEEDED = 'FETCH_REFRESH_TOKEN_SUCCEEDED';
 export const FETCH_ACCESS_TOKEN_SUCCEEDED = 'FETCH_ACCESS_TOKEN_SUCCEEDED';
@@ -28,12 +32,22 @@ export const fetchAccessTokenStarted = () => ({
 });
 
 
+
+
 export const handleAuthCodeReceived = authCode => dispatch => {
   fetchRefreshToken(authCode)
     .then(({ refreshToken, accessToken }) => {
-      dispatch(fetchRefreshTokenSucceeded(refreshToken));
-      dispatch(fetchAccessTokenSucceeded(accessToken));
       localStorage.setItem('refreshToken', refreshToken);
+
+      // NOTE: This is all repeat logic from handleApplicationStarted! Clean this up.
+      dispatch(fetchPlaylistsStarted());
+      dispatch(fetchAccessTokenSucceeded(accessToken));
+      dispatch(fetchRefreshTokenSucceeded(refreshToken));
+
+      fetchPlaylists(accessToken)
+        .then(playlists => dispatch(fetchPlaylistsSucceeded(playlists)))
+        .catch(err => alert(err));
+
     })
     .catch(error => alert(error));
 };

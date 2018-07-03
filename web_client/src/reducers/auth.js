@@ -8,8 +8,8 @@ import {
 const initialState = {
   accessToken: null,
   refreshToken: null,
-  fetchingAccessToken: true,
-  fetchingRefreshToken: true
+  fetchingAccessToken: false,
+  fetchingRefreshToken: false
 };
 
 const auth = (state = initialState, action) => {

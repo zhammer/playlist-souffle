@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "connected-react-router": "^4.3.0",
     "emotion": "^9.2.4",
     "query-string": "^6.1.0",
     "react": "^16.4.1",
