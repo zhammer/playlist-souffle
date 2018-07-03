@@ -1,7 +1,7 @@
 import { fetchPlaylists } from 'services/api';
 import { getAccessToken } from 'selectors';
 
-const FETCH_PLAYLISTS_SUCCEEDED = 'FETCH_PLAYLISTS_SUCCEEDED';
+export const FETCH_PLAYLISTS_SUCCEEDED = 'FETCH_PLAYLISTS_SUCCEEDED';
 
 const fetchPlaylistsSucceeded = (playlists) => ({
   type: FETCH_PLAYLISTS_SUCCEEDED,
@@ -10,11 +10,11 @@ const fetchPlaylistsSucceeded = (playlists) => ({
   }
 });
 
-const handlePlaylistsPageLoaded = () => (dispatch, getState) => {
+export const handlePlaylistsPageLoaded = () => (dispatch, getState) => {
   const state = getState();
   const accessToken = getAccessToken(state);
 
   fetchPlaylists(accessToken)
-    .then(playlists => fetchPlaylistsSucceeded(playlists))
+    .then(playlists => dispatch(fetchPlaylistsSucceeded(playlists)))
     .catch(err => console.log(err)); // Should clear accesstoken
 };

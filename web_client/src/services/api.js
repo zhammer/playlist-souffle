@@ -46,5 +46,5 @@ export async function fetchPlaylists (accessToken) {
   const response = await request.get(SPOTIFY_URL + '/me/playlists')
         .set('Authorization', 'Bearer ' + accessToken);
 
-  return response.body;
+  return response.body.items;
 }

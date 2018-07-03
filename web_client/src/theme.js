@@ -5,7 +5,8 @@ const colors = {
   lightGreen: 'hsl(172, 71%, 35%)',
   blue: 'hsl(207, 54%, 51%)',
   red: 'hsl(0, 100%, 41%)',
-  white: 'hsl(218, 100%, 95%)'
+  white: 'hsl(218, 100%, 95%)',
+  opaqueWhite: 'hsla(218, 100%, 95%, 10%)'
 }
 
 export default colors;

@@ -1,6 +1,10 @@
 import { FETCH_PLAYLISTS_SUCCEEDED } from './actions';
 
-const playlists = (state = {}, action) => {
+const initialState = {
+  playlists: {}
+};
+
+const playlists = (state = initialState, action) => {
   switch(action.type) {
     case FETCH_PLAYLISTS_SUCCEEDED: {
       return action.payload.playlists;
@@ -10,3 +14,5 @@ const playlists = (state = {}, action) => {
       return state;
   }
 };
+
+export default playlists;
