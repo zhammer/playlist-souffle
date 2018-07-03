@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import auth from './auth';
-import playlists from 'scenes/Playlists/reducers';
+import playlists from 'scenes/Playlists/PlaylistSelector/reducers';
 
 export default combineReducers({
   auth,
