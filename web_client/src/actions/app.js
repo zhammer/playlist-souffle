@@ -1,4 +1,6 @@
-import { fetchRefreshTokenSucceeded } from 'actions/auth';
+import { fetchAccessTokenSucceeded, fetchRefreshTokenSucceeded,
+         fetchAccessTokenStarted, fetchRefreshTokenStarted
+       } from 'actions/auth';
 import { fetchAccessToken } from 'services/api';
 
 export const handleApplicationStarted = () => dispatch => {
@@ -8,8 +10,13 @@ export const handleApplicationStarted = () => dispatch => {
     return;
   }
 
-  // Note: Shouldn't use fetchRefreshTokenSucceeded
+  dispatch(fetchAccessTokenStarted());
+  dispatch(fetchRefreshTokenStarted());
+
   fetchAccessToken(refreshToken)
-    .then(accessToken => dispatch(fetchRefreshTokenSucceeded(refreshToken, accessToken)))
+    .then(accessToken => {
+      dispatch(fetchAccessTokenSucceeded(accessToken));
+      dispatch(fetchRefreshTokenSucceeded(refreshToken));
+    })
     .catch(error => localStorage.removeItem('refreshToken'));
 };

@@ -1,3 +1,3 @@
-import { getAccessToken } from './auth';
+import { getAccessToken, getFetchingAccessToken } from './auth';
 
-export { getAccessToken };
+export { getAccessToken, getFetchingAccessToken };

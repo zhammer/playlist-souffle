@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { getAccessToken } from 'selectors';
 import { fetchPlaylists } from 'services/api';
 import { handlePlaylistsPageLoaded } from './actions';
-import { getPlaylists } from './selectors';
+import { getPlaylists, getPlaylistsPageLoading } from './selectors';
 import Playlists from './Playlists';
 
 class PlaylistsContainer extends Component {
@@ -19,7 +19,8 @@ class PlaylistsContainer extends Component {
 const mapStateToProps = (state, props) => ({
   ...props,
   accessToken: getAccessToken(state),
-  playlists: getPlaylists(state)
+  playlists: getPlaylists(state),
+  loading: getPlaylistsPageLoading(state)
 });
 
 
