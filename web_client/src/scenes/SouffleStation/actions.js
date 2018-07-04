@@ -27,3 +27,8 @@ export const handleSouffleButtonClicked = () => (dispatch, getState) => {
     })
     .catch(err => alert(err));
 };
+
+
+export const handleBackButtonClicked = () => dispatch => {
+  dispatch(push('/playlists'));
+};

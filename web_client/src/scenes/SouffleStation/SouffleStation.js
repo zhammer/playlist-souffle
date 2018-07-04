@@ -17,21 +17,11 @@ const Layout = styled('div')`
   grid-template-areas: ". title ." ". playlist ." "button button button";
   grid-row-gap: 1em;
   width: 100%;
-  margin: 0 auto;
+  margin: .5em auto;
   height: 90vh;
-`;
 
-// TODO: I should make an h2 or this.
-const PlaylistName = styled(StyledH3)`
-  display: block;
-  text-transform: uppercase;
-  margin: 0;
-  padding-top: .5em;
-  grid-area: title;
-  width: 100%;
-  transform: scale(1.25);
-  overflow: hidden;
   @media (min-width: 35em) {
+    margin-top: 1.5em;
   }
 `;
 
@@ -62,14 +52,73 @@ const Playlist = styled(PlaylistWidget)`
   grid-area: playlist;
 `;
 
+const Header = styled('div')`
+  grid-area: title;
+  display: grid;
+  grid-template-columns: 10% 1fr 10%;
+  margin: 0;
+`;
+
+// TODO: I should make an h2 or this.
+const PlaylistName = styled(StyledH3)`
+  text-transform: uppercase;
+  margin: 0;
+  align-self: center;
+  font-size: 1.5em;
+  @media (min-width: 35em) {
+    font-size: 2em;
+  }
+`;
+
+const BackButton = styled('div')`
+  text-align: center;
+  cursor: pointer;
+  align-self: center;
+  justify-self: center;
+  color ${colors.lightGreen};
+  font-size: 1.5rem;
+  position:relative;
+  width: 100%;
+
+  @media (min-width: 35em) {
+    font-size: 2.5rem;
+  }
+
+  ::after {
+    transition: background .5s linear;
+    cursor: pointer;
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    content: "";
+    z-index: -1;
+    border: .1em solid ${colors.lightGreen};
+    border-radius: 5em;
+    background: ${colors.opaqueWhite};
+    left: -.325em;
+    top: .125em;
+
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+  }
+
+  &:hover::after {
+    background: ${colors.opaqueLightGreen};
+  }
+`;
+
 const ARTIST_EMOJI = '\uD83D\uDC69\uD83C\uDFFD\u200D\uD83C\uDFA8';
 const ALBUM_EMOJI = '\uD83D\uDCBD';
 
-const SouffleStation = ({ playlist, onSouffleButtonClicked, souffledFrom, souffleBy }) => (
+const SouffleStation = ({ playlist, onSouffleButtonClicked, souffledFrom, souffleBy, onBackButtonClicked }) => (
   <Layout>
-    <PlaylistName>
-      {playlist ? playlist.name : 'Not found'}
-    </PlaylistName>
+    <Header>
+      <BackButton onClick={onBackButtonClicked}>{'<'}</BackButton>
+      <PlaylistName>
+        {playlist ? playlist.name : 'Not found'}
+      </PlaylistName>
+    </Header>
     <Playlist uri={playlist && playlist.uri} />
     {playlist && <SouffleButton onClick={onSouffleButtonClicked}>
         {souffledFrom ? 'ReSouffle' : 'Souffle'} by {souffleBy === 'artist' ? ARTIST_EMOJI : ALBUM_EMOJI }

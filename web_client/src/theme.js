@@ -4,6 +4,7 @@ const colors = {
   darkBlue: 'hsl(203, 91%, 14%)',
   green: 'hsl(172, 71%, 25%)',
   lightGreen: 'hsl(172, 71%, 35%)',
+  opaqueLightGreen: 'hsla(172, 40%, 35%, 50%)',
   blue: 'hsl(207, 54%, 51%)',
   red: 'hsl(0, 100%, 41%)',
   white: 'hsl(218, 100%, 95%)',
