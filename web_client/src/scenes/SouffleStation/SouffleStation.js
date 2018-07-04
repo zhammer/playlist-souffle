@@ -34,14 +34,20 @@ const PlaylistName = styled(StyledH3)`
 const SouffleButton = styled(CtaButton)`
   justify-self: center;
   margin: 1em;
+  margin-top: .5em;
   transition: background .5s linear;
   text-shadow: 1px 1px ${colors.darkBlue};
+  padding-left: 2.25em;
+  padding-right: 2.25em;
 
   &:hover {
     background: ${colors.lightYellow};
   }
 
   @media (min-width: 50em) {
+    padding-left: 3em;
+    padding-right: 3em;
+    margin: 1em;
     font-size: 1.75rem;
   }
 `;
