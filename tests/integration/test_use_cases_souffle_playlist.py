@@ -35,11 +35,12 @@ class TestSoufflePlaylist:
         spotify_mock.fetch_related_tracks_by_track.return_value = related_tracks_by_track
         spotify_mock.fetch_playlist.return_value = playlist
         spotify_mock.create_playlist.return_value = injected_souffled_playlist_uri
+        spotify_mock.fetch_current_user_id.return_value = user_id
 
         # When
         with patch('playlist_souffle.use_cases.souffle_playlist.dt') as mock_dt:
             mock_dt.now.return_value = injected_dt
-            souffled_playlist_uri = souffle_playlist(spotify_mock, user_id, playlist_uri, 'artist')
+            souffled_playlist_uri = souffle_playlist(spotify_mock, playlist_uri, 'artist')
 
         # Then
         expected_playlist = Playlist(
