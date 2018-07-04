@@ -10,7 +10,7 @@ const PlaylistWidget = ({ uri, className }) => (
   <Frame className={className}>
     <iframe
       src={'https://open.spotify.com/embed?uri=' + uri}
-      frameborder="0"
+      frameBorder="0"
       allowtransparency="true"
       width='100%'
       height='100%'
