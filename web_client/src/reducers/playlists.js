@@ -1,8 +1,6 @@
 import {
   FETCH_PLAYLISTS_STARTED,
   FETCH_PLAYLISTS_SUCCEEDED,
-  FETCH_PLAYLIST_TRACKS_STARTED,
-  FETCH_PLAYLIST_TRACKS_SUCCEEDED
 } from 'actions/playlists';
 
 const initialState = {
@@ -25,24 +23,6 @@ const playlists = (state = initialState, action) => {
         ...state,
         fetchingPlaylists: true
       };
-
-    case FETCH_PLAYLIST_TRACKS_STARTED:
-      return {
-        ...state,
-        fetchingTracks: true
-      };
-
-    case FETCH_PLAYLIST_TRACKS_SUCCEEDED: {
-      const { payload: { playlistId, tracks } } = action;
-      const nextPlaylists = state.playlists.map(
-        playlist => playlist.id === playlistId ? { ...playlist, tracks } : playlist
-      );
-      return {
-        ...state,
-        playlists: nextPlaylists,
-        fetchingTracks: false
-      };
-    }
 
     default:
       return state;

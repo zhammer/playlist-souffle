@@ -16,8 +16,3 @@ export const getCurrentPlaylist = createSelector(
   (playlists, pathPlaylistId) =>
     pathPlaylistId && playlists.find(playlist => playlist.id === pathPlaylistId)
 );
-
-export const getCurrentPlaylistTracks = createSelector(
-  [getCurrentPlaylist],
-  currentPlaylist => (currentPlaylist && currentPlaylist.tracks) || []
-);

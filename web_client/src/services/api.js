@@ -55,16 +55,3 @@ export async function fetchPlaylists (accessToken) {
     })
   );
 }
-
-export async function fetchPlaylistTracks (accessToken, playlist) {
-  const response = await request.get(playlist.tracksHref)
-        .set('Authorization', 'Bearer ' + accessToken);
-
-  return response.body.items.map(
-    ({ track }) => {
-      const { name, id, album: { name: albumName }} = track;
-      const artistName = track.artists[0].name;
-      return { name, id, albumName, artistName };
-    }
-  );
-}
