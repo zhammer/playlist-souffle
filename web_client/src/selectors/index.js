@@ -1,18 +1,24 @@
 import { createSelector } from 'reselect';
 import { getAccessToken, getFetchingAccessToken, getFetchingRefreshToken } from './auth';
 import { getPlaylists, getFetchingPlaylists } from './playlists';
-import { getPathPlaylistId } from './ui';
+import { getPathPlaylistId, getSouffleing, getSouffledFromId } from './ui';
 
 export { getAccessToken, getFetchingAccessToken, getPlaylists, getFetchingPlaylists, getPathPlaylistId };
 
 export const getLoading = createSelector(
-  [getFetchingAccessToken, getFetchingPlaylists, getFetchingRefreshToken],
-  (fetchingAccessToken, fetchingPlaylists, fetchingRefreshToken) =>
-    fetchingAccessToken || fetchingPlaylists || fetchingRefreshToken
+  [getFetchingAccessToken, getFetchingPlaylists, getFetchingRefreshToken, getSouffleing],
+  (fetchingAccessToken, fetchingPlaylists, fetchingRefreshToken, souffleing) =>
+    fetchingAccessToken || fetchingPlaylists || fetchingRefreshToken || souffleing
 );
 
 export const getCurrentPlaylist = createSelector(
   [getPlaylists, getPathPlaylistId],
   (playlists, pathPlaylistId) =>
     pathPlaylistId && playlists.find(playlist => playlist.id === pathPlaylistId)
+);
+
+export const getSouffledFrom = createSelector(
+  [getPlaylists, getSouffledFromId],
+  (playlists, souffledFromId) =>
+    souffledFromId && playlists.find(playlist => playlist.id === souffledFromId)
 );

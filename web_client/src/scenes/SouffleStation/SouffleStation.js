@@ -58,13 +58,15 @@ const Playlist = styled(PlaylistWidget)`
   flex: 1 1 70%;
 `;
 
-const SouffleStation = ({ playlist }) => (
+const SouffleStation = ({ playlist, onSouffleButtonClicked, souffledFrom }) => (
   <Layout>
     <PlaylistName>
-      {playlist && playlist.name}
+      {playlist ? playlist.name : 'Not found'}
     </PlaylistName>
     <Playlist uri={playlist && playlist.uri} />
-    <SouffleButton>Souffle</SouffleButton>
+    {playlist && <SouffleButton onClick={onSouffleButtonClicked}>
+        {souffledFrom ? 'ReSouffle' : 'Souffle'}
+    </SouffleButton>}
   </Layout>
 );
 
