@@ -1,5 +1,6 @@
 const colors = {
   yellow: 'hsl(43, 100%, 52%)',
+  lightYellow: 'hsl(43, 80%, 80%)',
   darkBlue: 'hsl(203, 91%, 14%)',
   green: 'hsl(172, 71%, 25%)',
   lightGreen: 'hsl(172, 71%, 35%)',

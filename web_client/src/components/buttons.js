@@ -3,7 +3,6 @@ import colors from 'theme';
 
 const base = css`
   color: ${colors.white};
-  background: grey;
   font-size: 1.5rem;
   text-transform: uppercase;
   letter-spacing: .1em;
@@ -26,6 +25,8 @@ const spotify = css`
 `;
 
 const cta = css`
+  background: transparent;
+  border: .25em solid ${colors.yellow};
   color: ${colors.yellow};
 `;
 

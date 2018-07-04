@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
 import { getAccessToken, getFetchingAccessToken, getFetchingRefreshToken } from './auth';
 import { getPlaylists, getFetchingPlaylists } from './playlists';
-import { getCurrentPlaylist } from './ui';
+import { getPathPlaylistId } from './ui';
 
-export { getAccessToken, getFetchingAccessToken, getPlaylists, getFetchingPlaylists, getCurrentPlaylist };
+export { getAccessToken, getFetchingAccessToken, getPlaylists, getFetchingPlaylists, getPathPlaylistId };
 
 export const getLoading = createSelector(
   [getFetchingAccessToken, getFetchingPlaylists, getFetchingRefreshToken],
@@ -11,7 +11,13 @@ export const getLoading = createSelector(
     fetchingAccessToken || fetchingPlaylists || fetchingRefreshToken
 );
 
-// Selectors for connected-react-router
+export const getCurrentPlaylist = createSelector(
+  [getPlaylists, getPathPlaylistId],
+  (playlists, pathPlaylistId) =>
+    pathPlaylistId && playlists.find(playlist => playlist.id === pathPlaylistId)
+);
 
-export const getPathname = state => state.router.location.pathname;
-export const getSearch = state => state.router.location.search;
+export const getCurrentPlaylistTracks = createSelector(
+  [getCurrentPlaylist],
+  currentPlaylist => (currentPlaylist && currentPlaylist.tracks) || []
+);

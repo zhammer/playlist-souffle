@@ -43,8 +43,28 @@ export async function fetchAccessToken (refreshToken) {
 const SPOTIFY_URL = 'https://api.spotify.com/v1';
 
 export async function fetchPlaylists (accessToken) {
-  const response = await request.get(SPOTIFY_URL + '/me/playlists')
+  const response = await request.get(SPOTIFY_URL + '/me/playlists?limit=50')
         .set('Authorization', 'Bearer ' + accessToken);
 
-  return response.body.items;
+  return response.body.items.map(
+    ({ id, name, uri, tracks: { href: tracksHref } }) => ({
+      id,
+      name,
+      uri,
+      tracksHref
+    })
+  );
+}
+
+export async function fetchPlaylistTracks (accessToken, playlist) {
+  const response = await request.get(playlist.tracksHref)
+        .set('Authorization', 'Bearer ' + accessToken);
+
+  return response.body.items.map(
+    ({ track }) => {
+      const { name, id, album: { name: albumName }} = track;
+      const artistName = track.artists[0].name;
+      return { name, id, albumName, artistName };
+    }
+  );
 }

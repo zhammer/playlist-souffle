@@ -1,20 +1,27 @@
 import { push } from 'connected-react-router';
-import { playlistSelected } from 'actions/ui';
-import { getPlaylists }  from 'selectors';
-import { getPathPlaylistId } from './selectors';
+import { fetchPlaylistTracks } from 'services/api';
+import { souffleStationLoaded } from 'actions/ui';
+import { fetchPlaylistTracksStarted, fetchPlaylistTracksSucceeded } from 'actions/playlists';
+import { getCurrentPlaylist, getCurrentPlaylistTracks, getAccessToken } from 'selectors';
 
 
 export const handleSouffleStationLoaded = () => (dispatch, getState) => {
   const state = getState();
-  const pathPlaylistId = getPathPlaylistId(state);
-  const playlists = getPlaylists(state);
 
-  const currentPlaylist = playlists.find(playlist => playlist.id === pathPlaylistId);
+  const currentPlaylist = getCurrentPlaylist(state);
   if (!currentPlaylist) {
-    console.log('hey');
-    dispatch(push('/'));
+    // 404
     return;
   }
 
-  dispatch(playlistSelected(currentPlaylist));
+  if (getCurrentPlaylistTracks(state).length > 0) {
+    // tracks already loaded
+    return;
+  }
+
+  const accessToken = getAccessToken(state);
+  dispatch(fetchPlaylistTracksStarted());
+  fetchPlaylistTracks(accessToken, currentPlaylist)
+    .then(tracks => dispatch(fetchPlaylistTracksSucceeded(currentPlaylist.id, tracks)))
+    .catch(err => alert(err));
 };
