@@ -8,16 +8,15 @@ import PlaylistWidget from './components/PlaylistWidget';
 
 const Layout = styled('div')`
   width: 60%;
-  min-width: 25em;
+  min-width: 20em;
   max-width: 50em;
   margin: 0 auto;
-  display: grid;
-  max-height: 100vh;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto auto auto;
-  grid-template-areas: "title"
-                       "tracks"
-                       "button";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 90vh;
+
 `;
 
 // TODO: I should make an h2 or this.
@@ -25,11 +24,14 @@ const PlaylistName = styled(StyledH3)`
   text-transform: uppercase;
   margin: 1em;
   transform: scale(1.25);
-  grid-area: title;
+  display: none;
+
+  @media (min-width: 35em) {
+    display: inherit;
+  }
 `;
 
 const SouffleButton = styled(CtaButton)`
-  grid-area: button;
   justify-self: center;
   margin: 1em;
   transition: background .5s linear;
@@ -38,13 +40,16 @@ const SouffleButton = styled(CtaButton)`
   &:hover {
     background: ${colors.lightYellow};
   }
+
+  @media (min-width: 50em) {
+    font-size: 1.75rem;
+  }
 `;
 
 const Playlist = styled(PlaylistWidget)`
-  grid-area: tracks;
+  margin-top: 1em;
   width: 100%;
-  height: 35em;
-  border-radius: 5em !important;
+  flex: 1 1 70%;
 `;
 
 const SouffleStation = ({ playlist }) => (
