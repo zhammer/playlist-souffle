@@ -6,7 +6,7 @@ import {
 } from 'actions/playlists';
 
 const initialState = {
-  playlists: {},
+  playlists: [],
   fetchingPlaylists: false,
   fetchingTracks: false
 };
