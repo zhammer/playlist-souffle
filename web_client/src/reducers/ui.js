@@ -1,7 +1,8 @@
-import { SOUFFLE_STARTED, SOUFFLE_SUCCEEDED } from 'actions/ui';
+import { SOUFFLE_STARTED, SOUFFLE_SUCCEEDED, SOUFFLE_BY_UPDATED } from 'actions/ui';
 
 const initialState = {
-  souffleing: false
+  souffleing: false,
+  souffleBy: 'artist'
 };
 
 const ui = (state = initialState, action) => {
@@ -11,6 +12,9 @@ const ui = (state = initialState, action) => {
 
     case SOUFFLE_SUCCEEDED:
       return { ...state, souffleing: false };
+
+    case SOUFFLE_BY_UPDATED:
+      return { ...state, souffleBy: action.payload.souffleBy};
 
     default:
       return state;

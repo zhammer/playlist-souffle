@@ -65,14 +65,14 @@ const Playlist = styled(PlaylistWidget)`
 const ARTIST_EMOJI = '\uD83D\uDC69\uD83C\uDFFD\u200D\uD83C\uDFA8';
 const ALBUM_EMOJI = '\uD83D\uDCBD';
 
-const SouffleStation = ({ playlist, onSouffleButtonClicked, souffledFrom }) => (
+const SouffleStation = ({ playlist, onSouffleButtonClicked, souffledFrom, souffleBy }) => (
   <Layout>
     <PlaylistName>
       {playlist ? playlist.name : 'Not found'}
     </PlaylistName>
     <Playlist uri={playlist && playlist.uri} />
     {playlist && <SouffleButton onClick={onSouffleButtonClicked}>
-        {souffledFrom ? 'ReSouffle' : 'Souffle'} by {ARTIST_EMOJI}
+        {souffledFrom ? 'ReSouffle' : 'Souffle'} by {souffleBy === 'artist' ? ARTIST_EMOJI : ALBUM_EMOJI }
     </SouffleButton>}
   </Layout>
 );
