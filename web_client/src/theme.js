@@ -7,7 +7,7 @@ const colors = {
   blue: 'hsl(207, 54%, 51%)',
   red: 'hsl(0, 100%, 41%)',
   white: 'hsl(218, 100%, 95%)',
-  opaqueWhite: 'hsla(218, 100%, 95%, 10%)'
+  opaqueWhite: 'hsl(206, 47%, 22%)'
 }
 
 export default colors;
