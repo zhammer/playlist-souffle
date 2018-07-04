@@ -96,11 +96,6 @@ paths:
                 playlistUri:
                   type: string
                   description: Uri of the playlist to be souffled.
-                userId:
-                  type: string
-                  description: >
-                    Id of the current user on whose account the souffle
-                    playlist will be created.
                 shuffleBy:
                   type: string
                   description: Type of collection to shuffle by.

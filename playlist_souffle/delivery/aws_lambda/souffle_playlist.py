@@ -49,7 +49,6 @@ def handler(event, context):
     try:
         playlist_uri = request_body['playlistUri'][0]
         shuffle_by = request_body['shuffleBy'][0]
-        user_id = request_body['userId'][0]
     except KeyError as e:
         return generate_api_gateway_response(
             400,
@@ -65,7 +64,7 @@ def handler(event, context):
 
     # Souffle playlist
     try:
-        souffled_playlist_uri = souffle_playlist(spotify, user_id, playlist_uri, shuffle_by)
+        souffled_playlist_uri = souffle_playlist(spotify, playlist_uri, shuffle_by)
     except SouffleParameterError as e:
         return generate_api_gateway_response(400, body={'message': e})
     except SouffleSpotifyError as e:

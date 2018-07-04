@@ -94,3 +94,14 @@ class SpotifyGateway:
         playlist_track_ids = [track.id for track in playlist.tracks]
         self._spotify.user_playlist_add_tracks(playlist.user_id, playlist_id, playlist_track_ids)
         return playlist_uri
+
+
+    @raise_spotipy_error_as_souffle_error
+    def fetch_current_user_id(self):
+        """Fetch the current user id based on the access token provided to the SpotifyGateway
+        constructor.
+
+        Note: This should eventually return a plucked User namedtuple.
+        """
+        response = self._spotify.current_user()
+        return response['id']
