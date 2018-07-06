@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { getCurrentPlaylist, getSouffledFrom, getSouffleBy } from 'selectors';
 import SouffleStation from './SouffleStation';
-import { handleSouffleButtonClicked, handleBackButtonClicked } from './actions';
+import { handleSouffleButtonClicked, handleBackButtonClicked, handleToggleButtonClicked } from './actions';
 
 const mapStateToProps = (state, props) => ({
   ...props,
@@ -15,7 +15,9 @@ const mapDispatchToProps = dispatch => (
   bindActionCreators(
     {
       onSouffleButtonClicked: handleSouffleButtonClicked,
-      onBackButtonClicked: handleBackButtonClicked
+      onBackButtonClicked: handleBackButtonClicked,
+      onToggleButtonClicked: handleToggleButtonClicked
+
     },
     dispatch
   )

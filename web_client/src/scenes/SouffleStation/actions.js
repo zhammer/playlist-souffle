@@ -1,7 +1,7 @@
 import { push } from 'connected-react-router';
 import { fetchPlaylistStarted, fetchPlaylistSucceeded, handlePlaylistDeleted } from 'actions/playlists';
-import { souffleStarted, souffleSucceeded } from 'actions/ui';
-import { getCurrentPlaylist, getAccessToken, getSouffledFrom } from 'selectors';
+import { souffleStarted, souffleSucceeded, souffleByUpdated } from 'actions/ui';
+import { getCurrentPlaylist, getAccessToken, getSouffledFrom, getSouffleBy } from 'selectors';
 import { souffle, fetchPlaylist } from 'services/api';
 
 export const handleSouffleButtonClicked = () => (dispatch, getState) => {
@@ -31,4 +31,11 @@ export const handleSouffleButtonClicked = () => (dispatch, getState) => {
 
 export const handleBackButtonClicked = () => dispatch => {
   dispatch(push('/playlists'));
+};
+
+export const handleToggleButtonClicked = () => (dispatch, getState) => {
+  const currentSouffleBy = getSouffleBy(getState());
+
+  const nextSouffleBy = currentSouffleBy === 'artist' ? 'album' : 'artist';
+  dispatch(souffleByUpdated(nextSouffleBy));
 };

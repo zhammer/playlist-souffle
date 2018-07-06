@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'react-emotion';
 
-import colors from 'theme';
+import colors, { artistEmoji, albumEmoji } from 'theme';
 import { StyledH1, StyledH3, StyledH4 } from 'components/headers';
 import { SpotifyButton } from 'components/buttons';
 
@@ -33,7 +33,9 @@ const Landing = ({ onLoginButtonClicked }) => (
   <div className="Landing">
     <StyledH1>Playlist Souffle</StyledH1>
     <UnderlinedH3><YellowOnHover>Souffle</YellowOnHover> up your playlists</UnderlinedH3>
-    <StyledH4>Swap out each track with another track on the same album or by the same artist.</StyledH4>
+    <StyledH4>
+      Swap out each track with another track on the same album {albumEmoji} or by the same artist {artistEmoji}.
+    </StyledH4>
     <SouffleHero />
     <ButtonContainer>
       <SpotifyButton onClick={onLoginButtonClicked}>Login</SpotifyButton>

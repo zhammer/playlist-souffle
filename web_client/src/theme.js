@@ -12,3 +12,7 @@ const colors = {
 }
 
 export default colors;
+
+
+export const artistEmoji = '\uD83D\uDC69\uD83C\uDFFD\u200D\uD83C\uDFA8';
+export const albumEmoji = '\uD83D\uDCBD';

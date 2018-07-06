@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'react-emotion';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { StyledH3 } from 'components/headers';
-import { CtaButton } from 'components/buttons';
 import colors from 'theme';
+import SouffleButton from './components/SouffleButton';
 import PlaylistWidget from './components/PlaylistWidget';
+
 // import { TileColumn, Tile } from 'components/TileGrid';
 
 const Layout = styled('div')`
@@ -16,7 +18,7 @@ const Layout = styled('div')`
   grid-template-columns: 10% 1fr 10%;
   grid-template-areas: "back   title    ."
                        ".      playlist ."
-                       "button button   button";
+                       ". button   .";
   grid-row-gap: 1em;
   width: 100%;
   margin: .5em auto;
@@ -26,27 +28,6 @@ const Layout = styled('div')`
 
   @media (min-width: 35em) {
     margin-top: 1.5em;
-  }
-`;
-
-const SouffleButton = styled(CtaButton)`
-  justify-self: center;
-  margin: 0;
-  grid-area: button;
-  transition: background .5s linear;
-  text-shadow: 1px 1px ${colors.darkBlue};
-  padding-left: 1.25em;
-  padding-right: 1.25em;
-  font-size: 1.25rem;
-
-  &:hover {
-    background: ${colors.lightYellow};
-  }
-
-  @media (min-width: 50em) {
-    padding-left: 3em;
-    padding-right: 3em;
-    font-size: 1.75rem;
   }
 `;
 
@@ -77,6 +58,7 @@ const BackButton = styled('div')`
   font-size: 1.5rem;
   position:relative;
   width: 100%;
+  content: '<';
 
   @media (min-width: 35em) {
     font-size: 2.5rem;
@@ -106,20 +88,33 @@ const BackButton = styled('div')`
   }
 `;
 
+const SouffleButtonContainer = styled('div')`
+  grid-area: button;
+  justify-self: center;
+  width: 100%;
+`;
+
 const ARTIST_EMOJI = '\uD83D\uDC69\uD83C\uDFFD\u200D\uD83C\uDFA8';
 const ALBUM_EMOJI = '\uD83D\uDCBD';
 
-const SouffleStation = ({ playlist, onSouffleButtonClicked, souffledFrom, souffleBy, onBackButtonClicked }) => (
+const BACK_ARROW = '<'; // saving as var is just to fix an annoying editor spacing indentation glitch
+
+const SouffleStation = ({ playlist, onSouffleButtonClicked, onToggleButtonClicked, souffledFrom, souffleBy, onBackButtonClicked }) => (
   <Layout>
-    <BackButton onClick={onBackButtonClicked}>{'<'}</BackButton>
-                                                  <PlaylistName>
-                                                    {playlist ? playlist.name : 'Not found'}
-                                                  </PlaylistName>
-                                                  <Playlist uri={playlist && playlist.uri} />
-                                                  {playlist && <SouffleButton onClick={onSouffleButtonClicked}>
-                                                      {souffledFrom ? 'ReSouffle' : 'Souffle'} by {souffleBy === 'artist' ? ARTIST_EMOJI : ALBUM_EMOJI }
-                                                  </SouffleButton>}
-  </Layout>
+    <BackButton onClick={onBackButtonClicked}>{BACK_ARROW}</BackButton>
+    <PlaylistName>
+      {playlist ? playlist.name : 'Not found'}
+    </PlaylistName>
+    <Playlist uri={playlist && playlist.uri} />
+    <SouffleButtonContainer>
+      {playlist && <SouffleButton
+                       souffleBy={souffleBy}
+                       isResouffle={!!souffledFrom}
+                       onSouffleButtonClicked={onSouffleButtonClicked}
+                       onToggleButtonClicked={onToggleButtonClicked}/>
+      }
+    </SouffleButtonContainer>
+</Layout>
 );
 
 export default SouffleStation;
