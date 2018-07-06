@@ -24,11 +24,20 @@ const spotify = css`
   }
 `;
 
+const danger = css`
+  background-color: ${colors.red};
+  transition: background .05s linear;
+  &:hover {
+    background: ${colors.lightRed};
+  }
+`;
+
 const cta = css`
   background: transparent;
   border: .25em solid ${colors.yellow};
   color: ${colors.yellow};
 `;
 
+export const DangerButton = styled('button')(css`${base} ${danger}`);
 export const SpotifyButton = styled('button')(css`${base} ${spotify}`);
 export const CtaButton = styled('button')(css`${base} ${cta}`);

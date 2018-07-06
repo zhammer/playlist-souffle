@@ -8,7 +8,7 @@ const PlaylistsTileGrid = styled(TileGrid)`
   width: 60%;
   min-width: 20em;
   margin: 0 auto;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 `;
 
 const hoveredStyle = css`

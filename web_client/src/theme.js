@@ -7,6 +7,7 @@ const colors = {
   opaqueLightGreen: 'hsla(172, 40%, 35%, 50%)',
   blue: 'hsl(207, 54%, 51%)',
   red: 'hsl(0, 100%, 41%)',
+  lightRed: 'hsl(0, 100%, 55%)',
   white: 'hsl(218, 100%, 95%)',
   opaqueWhite: 'hsl(206, 47%, 22%)'
 }

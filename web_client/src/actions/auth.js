@@ -1,3 +1,4 @@
+import { push } from 'connected-react-router';
 import { fetchRefreshToken, fetchPlaylists } from 'services/api';
 import {
   fetchPlaylistsStarted,
@@ -8,6 +9,7 @@ export const FETCH_REFRESH_TOKEN_SUCCEEDED = 'FETCH_REFRESH_TOKEN_SUCCEEDED';
 export const FETCH_ACCESS_TOKEN_SUCCEEDED = 'FETCH_ACCESS_TOKEN_SUCCEEDED';
 export const FETCH_REFRESH_TOKEN_STARTED = 'FETCH_REFRESH_TOKEN_STARTED';
 export const FETCH_ACCESS_TOKEN_STARTED = 'FETCH_ACCESS_TOKEN_STARTED';
+export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
 
 export const fetchRefreshTokenSucceeded = (refreshToken) => ({
   type: FETCH_REFRESH_TOKEN_SUCCEEDED,
@@ -31,6 +33,15 @@ export const fetchAccessTokenStarted = () => ({
   type: FETCH_ACCESS_TOKEN_STARTED
 });
 
+export const userLoggedOut = () => ({
+  type: USER_LOGGED_OUT
+});
+
+export const handleLogoutButtonClicked = () => dispatch => {
+  localStorage.removeItem('refreshToken');
+  dispatch(userLoggedOut());
+  dispatch(push('/'));
+};
 
 
 

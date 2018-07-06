@@ -2,7 +2,8 @@ import {
   FETCH_REFRESH_TOKEN_SUCCEEDED,
   FETCH_ACCESS_TOKEN_SUCCEEDED,
   FETCH_REFRESH_TOKEN_STARTED,
-  FETCH_ACCESS_TOKEN_STARTED
+  FETCH_ACCESS_TOKEN_STARTED,
+  USER_LOGGED_OUT,
 } from 'actions/auth';
 
 const initialState = {
@@ -44,7 +45,12 @@ const auth = (state = initialState, action) => {
         fetchingAccessToken: true
       };
 
-
+    case USER_LOGGED_OUT:
+      return {
+        ...state,
+        accessToken: null,
+        refreshToken: null
+      };
 
     default:
       return state;

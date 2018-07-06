@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { handlePlaylistSelected } from 'actions/ui';
+import { handleLogoutButtonClicked } from 'actions/auth';
 import { getPlaylists } from 'selectors';
 import PlaylistsPage from './PlaylistsPage';
 
@@ -12,6 +13,7 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => (
   bindActionCreators(
     {
+      onLogoutButtonClicked: handleLogoutButtonClicked,
       onPlaylistSelected: handlePlaylistSelected
     },
     dispatch
