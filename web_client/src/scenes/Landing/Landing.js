@@ -1,6 +1,6 @@
 import React from 'react';
 
-import styled from 'react-emotion';
+import styled, { keyframes } from 'react-emotion';
 
 import colors, { artistEmoji, albumEmoji } from 'theme';
 import { StyledH1, StyledH3, StyledH4 } from 'components/headers';
@@ -9,13 +9,27 @@ import { SpotifyButton } from 'components/buttons';
 import SouffleHero from './components/SouffleHero';
 
 const UnderlinedH3 = styled(StyledH3)`
-  text-decoration: underline;
+
 `;
 
 const YellowOnHover = styled('span')`
   &:hover {
     color: ${colors.yellow};
   }
+`;
+
+const fadein = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const Title = styled(StyledH3)`
+  text-decoration: underline;
+  animation: ${fadein} .5s ease-in both;
+`;
+
+const Subtitle = styled(StyledH4)`
+  animation: ${fadein} 1s ease-in 1.5s both;
 `;
 
 const ButtonContainer = styled('div')`
@@ -32,10 +46,10 @@ const ButtonContainer = styled('div')`
 const Landing = ({ onLoginButtonClicked }) => (
   <div className="Landing">
     <StyledH1>Playlist Souffle</StyledH1>
-    <UnderlinedH3><YellowOnHover>Souffle</YellowOnHover> up your playlists</UnderlinedH3>
-    <StyledH4>
+    <Title><YellowOnHover>Souffle</YellowOnHover> up your playlists</Title>
+    <Subtitle>
       Swap out each track with another track on the same album {albumEmoji} or by the same artist {artistEmoji}.
-    </StyledH4>
+    </Subtitle>
     <SouffleHero />
     <ButtonContainer>
       <SpotifyButton onClick={onLoginButtonClicked}>Login</SpotifyButton>
