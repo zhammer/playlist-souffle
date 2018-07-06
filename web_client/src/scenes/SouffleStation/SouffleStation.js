@@ -14,10 +14,14 @@ const Layout = styled('div')`
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-template-columns: 10% 1fr 10%;
-  grid-template-areas: ". title ." ". playlist ." "button button button";
+  grid-template-areas: "back   title    ."
+                       ".      playlist ."
+                       "button button   button";
   grid-row-gap: 1em;
   width: 100%;
   margin: .5em auto;
+  padding-left: .5em;
+  padding-right: .5em;
   height: 90vh;
 
   @media (min-width: 35em) {
@@ -52,17 +56,11 @@ const Playlist = styled(PlaylistWidget)`
   grid-area: playlist;
 `;
 
-const Header = styled('div')`
-  grid-area: title;
-  display: grid;
-  grid-template-columns: 10% 1fr 10%;
-  margin: 0;
-`;
-
 // TODO: I should make an h2 or this.
 const PlaylistName = styled(StyledH3)`
   text-transform: uppercase;
   margin: 0;
+  grid-area: title;
   align-self: center;
   font-size: 1.5em;
   @media (min-width: 35em) {
@@ -113,16 +111,14 @@ const ALBUM_EMOJI = '\uD83D\uDCBD';
 
 const SouffleStation = ({ playlist, onSouffleButtonClicked, souffledFrom, souffleBy, onBackButtonClicked }) => (
   <Layout>
-    <Header>
-      <BackButton onClick={onBackButtonClicked}>{'<'}</BackButton>
-      <PlaylistName>
-        {playlist ? playlist.name : 'Not found'}
-      </PlaylistName>
-    </Header>
-    <Playlist uri={playlist && playlist.uri} />
-    {playlist && <SouffleButton onClick={onSouffleButtonClicked}>
-        {souffledFrom ? 'ReSouffle' : 'Souffle'} by {souffleBy === 'artist' ? ARTIST_EMOJI : ALBUM_EMOJI }
-    </SouffleButton>}
+    <BackButton onClick={onBackButtonClicked}>{'<'}</BackButton>
+                                                  <PlaylistName>
+                                                    {playlist ? playlist.name : 'Not found'}
+                                                  </PlaylistName>
+                                                  <Playlist uri={playlist && playlist.uri} />
+                                                  {playlist && <SouffleButton onClick={onSouffleButtonClicked}>
+                                                      {souffledFrom ? 'ReSouffle' : 'Souffle'} by {souffleBy === 'artist' ? ARTIST_EMOJI : ALBUM_EMOJI }
+                                                  </SouffleButton>}
   </Layout>
 );
 
