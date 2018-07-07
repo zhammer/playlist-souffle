@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'react-emotion';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { StyledH3 } from 'components/headers';
 import colors from 'theme';
 import SouffleButton from './components/SouffleButton';
@@ -93,9 +92,6 @@ const SouffleButtonContainer = styled('div')`
   justify-self: center;
   width: 100%;
 `;
-
-const ARTIST_EMOJI = '\uD83D\uDC69\uD83C\uDFFD\u200D\uD83C\uDFA8';
-const ALBUM_EMOJI = '\uD83D\uDCBD';
 
 const BACK_ARROW = '<'; // saving as var is just to fix an annoying editor spacing indentation glitch
 

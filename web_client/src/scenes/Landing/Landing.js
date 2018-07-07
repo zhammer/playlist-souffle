@@ -8,10 +8,6 @@ import { SpotifyButton } from 'components/buttons';
 
 import SouffleHero from './components/SouffleHero';
 
-const UnderlinedH3 = styled(StyledH3)`
-
-`;
-
 const YellowOnHover = styled('span')`
   &:hover {
     color: ${colors.yellow};
