@@ -11,12 +11,10 @@ export const redirectToAuthorizationPage = () => {
 };
 
 
-const BASE_URL = '';
-
 export async function fetchRefreshToken (authCode) {
   const body = 'redirectUri=' + REDIRECT_URI;
 
-  const response = await request.post(BASE_URL + '/refreshtoken')
+  const response = await request.post('/refreshtoken')
         .set('Authorization', 'Bearer ' + authCode)
         .send(body);
 
@@ -30,7 +28,7 @@ export async function fetchRefreshToken (authCode) {
 
 export async function fetchAccessToken (refreshToken) {
 
-  const response = await request.post(BASE_URL + '/accesstoken')
+  const response = await request.post('/accesstoken')
         .set('Authorization', 'Bearer ' + refreshToken);
 
   if (response.status !== 200) {
@@ -41,7 +39,7 @@ export async function fetchAccessToken (refreshToken) {
 }
 
 export async function souffle (accessToken, playlistUri, souffleBy) {
-  const response = await request.post(BASE_URL + '/souffle')
+  const response = await request.post('/souffle')
         .set('Authorization', 'Bearer ' + accessToken)
         .send({ playlistUri })
         .send({ shuffleBy: souffleBy })
