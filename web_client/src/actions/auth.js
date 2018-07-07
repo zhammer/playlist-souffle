@@ -46,6 +46,7 @@ export const handleLogoutButtonClicked = () => dispatch => {
 
 
 export const handleAuthCodeReceived = authCode => dispatch => {
+  dispatch(fetchRefreshTokenStarted());
   fetchRefreshToken(authCode)
     .then(({ refreshToken, accessToken }) => {
       localStorage.setItem('refreshToken', refreshToken);
