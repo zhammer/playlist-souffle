@@ -3,20 +3,29 @@ import {
   fetchAccessTokenSucceeded,
   fetchRefreshTokenSucceeded,
   fetchAccessTokenStarted,
-  fetchRefreshTokenStarted
+  fetchRefreshTokenStarted,
+  handleAuthCodeReceived,
 } from 'actions/auth';
 import {
   fetchPlaylistsStarted,
   fetchPlaylistsSucceeded
 } from 'actions/playlists';
+import { getAuthCode } from 'selectors';
 import { fetchAccessToken, fetchPlaylists } from 'services/api';
 
-export const handleApplicationStarted = () => dispatch => {
+export const handleApplicationStarted = () => (dispatch, getState) => {
   const refreshToken = localStorage.getItem('refreshToken');
+  const authCode = getAuthCode(getState());
 
   if (!refreshToken) {
-    dispatch(push('/'));
-    return;
+    if (authCode) {
+      dispatch(handleAuthCodeReceived(authCode));
+      return;
+    }
+    else {
+      dispatch(push('/'));
+      return;
+    }
   }
 
   dispatch(fetchAccessTokenStarted());

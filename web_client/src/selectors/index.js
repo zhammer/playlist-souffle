@@ -1,9 +1,10 @@
 import { createSelector } from 'reselect';
 import { getAccessToken, getFetchingAccessToken, getFetchingRefreshToken } from './auth';
 import { getPlaylists, getFetchingPlaylists } from './playlists';
-import { getPathPlaylistId, getSouffleing, getSouffledFromId, getSouffleBy } from './ui';
+import { getSouffleing, getSouffleBy } from './ui';
+import { getAuthCode, getSouffledFromId, getPathPlaylistId, } from './router';
 
-export { getAccessToken, getFetchingAccessToken, getPlaylists, getFetchingPlaylists, getPathPlaylistId, getSouffleBy };
+export { getAccessToken, getFetchingAccessToken, getPlaylists, getFetchingPlaylists, getPathPlaylistId, getSouffleBy, getAuthCode };
 
 export const getLoading = createSelector(
   [getFetchingAccessToken, getFetchingPlaylists, getFetchingRefreshToken, getSouffleing],
