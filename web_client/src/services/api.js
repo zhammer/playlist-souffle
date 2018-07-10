@@ -55,9 +55,10 @@ export async function souffle (accessToken, playlistUri, souffleBy) {
 
 const SPOTIFY_URL = 'https://api.spotify.com/v1';
 
-export async function fetchPlaylists (accessToken) {
-  const response = await request.get(SPOTIFY_URL + '/me/playlists?limit=50')
-        .set('Authorization', 'Bearer ' + accessToken);
+export async function fetchPlaylists (accessToken, limit=50) {
+  const response = await request.get(SPOTIFY_URL + '/me/playlists')
+        .set('Authorization', 'Bearer ' + accessToken)
+        .query({ limit });
 
   return response.body.items.map(
     ({ id, name, uri }) => ({
