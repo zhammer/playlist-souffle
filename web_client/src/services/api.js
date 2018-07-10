@@ -1,16 +1,16 @@
 import request from 'superagent';
 
-const CLIENT_ID = 'b231329aba1a4c539375436a267db917';
-//const REDIRECT_URI = 'http://127.0.0.1:3000';
-const REDIRECT_URI = 'http://192.168.1.151:3000';
+const REDIRECT_URI = 'http://192.168.1.151:3000'; // 'http://127.0.0.1:3000' for local dev.
 
-export const redirectToAuthorizationPage = () => {
-  window.location = 'https://accounts.spotify.com/authorize?client_id=' + CLIENT_ID
-    + '&response_type=code&redirect_uri=' + REDIRECT_URI
-    + '&scope=playlist-read-private%20playlist-modify-private%20playlist-modify-public';
-};
+// --------------------
+// Playlist Souffle API
+// --------------------
 
-
+/**
+ *  Fetch a spotify accessToken (used for temporary access to the Spotify API) and a refreshToken
+ *  (used for long-term ability to obtain fresh accessTokens) for the current user, given a spotify
+ *  authCode obtained via the spotify authorization page.
+ */
 export async function fetchRefreshToken (authCode) {
   const body = 'redirectUri=' + REDIRECT_URI;
 
@@ -26,6 +26,9 @@ export async function fetchRefreshToken (authCode) {
   return { refreshToken, accessToken };
 }
 
+/**
+ *  Fetch a spotify accessToken given a spotify refreshToken.
+ */
 export async function fetchAccessToken (refreshToken) {
 
   const response = await request.post('/accesstoken')
@@ -38,6 +41,9 @@ export async function fetchAccessToken (refreshToken) {
   return response.body.accessToken;
 }
 
+/**
+ *  Souffle a playlist.
+ */
 export async function souffle (accessToken, playlistUri, souffleBy) {
   const response = await request.post('/souffle')
         .set('Authorization', 'Bearer ' + accessToken)
@@ -52,23 +58,39 @@ export async function souffle (accessToken, playlistUri, souffleBy) {
   return response.headers['location'];
 }
 
+// -----------
+// Spotify API
+// -----------
 
+const CLIENT_ID = 'b231329aba1a4c539375436a267db917';
 const SPOTIFY_URL = 'https://api.spotify.com/v1';
 
+/**
+ *  Redirect the browser to the spotify authorize page.
+ */
+export const redirectToAuthorizationPage = () => {
+  window.location = 'https://accounts.spotify.com/authorize?client_id=' + CLIENT_ID
+    + '&response_type=code&redirect_uri=' + REDIRECT_URI
+    + '&scope=playlist-read-private%20playlist-modify-private%20playlist-modify-public';
+};
+
+/**
+ *  Fetch the current user's playlists. Default limit is set to 50.
+ */
 export async function fetchPlaylists (accessToken, limit=50) {
   const response = await request.get(SPOTIFY_URL + '/me/playlists')
         .set('Authorization', 'Bearer ' + accessToken)
         .query({ limit });
 
   return response.body.items.map(
-    ({ id, name, uri }) => ({
-      id,
-      name,
-      uri
-    })
+    ({ id, name, uri }) => ({ id, name, uri })
   );
 }
 
+/**
+ *  Given a spotify playlist uri (i.e. 'spotify:user:zach:playlist:123'), return a path for the
+ *  playlist (i.e. '/users/zach/playlists/123').
+ */
 export const playlistPathFromUri = playlistUri => {
   const substrings = playlistUri.split(':');
   const user = substrings[2];
@@ -76,6 +98,9 @@ export const playlistPathFromUri = playlistUri => {
   return '/users/' + user + '/playlists/' + playlist;
 };
 
+/**
+ *  Fetch a playlist object.
+ */
 export async function fetchPlaylist (accessToken, playlistUri) {
   const playlistPath = playlistPathFromUri(playlistUri);
   const response = await request.get(SPOTIFY_URL + playlistPath)
@@ -86,6 +111,9 @@ export async function fetchPlaylist (accessToken, playlistUri) {
 
 }
 
+/**
+ *  Delete (unfollow) a playlist followed by the current user.
+ */
 export async function deletePlaylist (accessToken, { uri }) {
   const playlistPath = playlistPathFromUri(uri);
   const response = await request.delete(SPOTIFY_URL + playlistPath + '/followers')
