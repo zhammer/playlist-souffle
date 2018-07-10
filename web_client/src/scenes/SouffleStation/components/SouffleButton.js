@@ -68,31 +68,17 @@ const StyledButtonRight = styled(Base)`
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-left-width: .15em;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
-// I need to learn how to actually use svgs..
 const StyledIcon = styled(BackForthIcon)`
   fill: ${colors.yellow};
   stroke: ${colors.yellow};
-
-  position: absolute;
-  transform: scale(.15);
-  left: -3.9em;
-  top: -2.3em;
-
-
-  @media (min-width: 35em) {
-    transform: scale(.15);
-    top: -2.4em;
-    left: -3.75em;
-  }
-
-  @media (min-width: 50em) {
-    transform: scale(.2);
-    top: -1.05em;
-    left: -2em;
-  }
+  margin-right: .25em;
+  height: 1.25em;
+  width: 1.25em;
 `;
 
 const SouffleButton = ({ isResouffle, souffleBy, onSouffleButtonClicked, onToggleButtonClicked }) => (
