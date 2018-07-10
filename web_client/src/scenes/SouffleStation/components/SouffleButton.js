@@ -1,15 +1,32 @@
 import React from 'react';
-import styled from 'react-emotion';
+import styled, { css } from 'react-emotion';
 import ReactCSSTransitionReplace from 'react-css-transition-replace';
 import colors, { artistEmoji, albumEmoji } from 'theme';
 import { CtaButton } from 'components/buttons';
 import BackForthIcon from './BackForthSvg';
-import './crossfade.css';
 
 const emojiBySouffleType = {
   artist: artistEmoji,
   album: albumEmoji
 };
+
+const crossFade = css`
+  &-leave {
+    opacity: 1;
+  }
+  &-leave&-leave-active {
+    opacity: 0;
+    transition: opacity .5s ease-out;
+  }
+
+  &-enter {
+    opacity: 0;
+  }
+  &-enter&-enter-active {
+    opacity: 1;
+    transition: opacity .5s ease-out;
+  }
+`;
 
 // TODO: This is a pain in the a** but whatever. I want the emoji to fade.
 const souffleButtonText = (isResouffle, souffleBy) => {
@@ -17,7 +34,7 @@ const souffleButtonText = (isResouffle, souffleBy) => {
   const text = (isResouffle ? 'ReSouffle' : 'Souffle') + ' by ' + emoji;
   return (
       <ReactCSSTransitionReplace
-        transitionName='cross-fade'
+        transitionName={crossFade}
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}>
         <div key={text}>{text}</div>
