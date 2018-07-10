@@ -1,6 +1,9 @@
 import styled from 'react-emotion';
 import colors from 'theme';
 
+/**
+ *  Styled 'Tile' used in a tiling display.
+ */
 const Tile = styled('div')`
   background-color: ${colors.opaqueWhite};
   display: flex;
