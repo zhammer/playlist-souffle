@@ -10,7 +10,6 @@ injectGlobal`
   * {
     box-sizing: border-box;
   }
-  @import url('https://fonts.googleapis.com/css?family=Monoton|Quicksand');
 
   body {
     margin: 0;
