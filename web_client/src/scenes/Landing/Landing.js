@@ -1,11 +1,8 @@
 import React from 'react';
-
 import styled, { keyframes } from 'react-emotion';
-
 import colors, { artistEmoji, albumEmoji } from 'theme';
 import { StyledH1, StyledH3, StyledH4 } from 'components/headers';
 import { SpotifyButton } from 'components/buttons';
-
 import SouffleHero from './components/SouffleHero';
 
 const YellowOnHover = styled('span')`
