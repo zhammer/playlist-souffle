@@ -5,21 +5,19 @@ import colors from 'theme';
 import SouffleButton from './components/SouffleButton';
 import PlaylistWidget from './components/PlaylistWidget';
 
-// import { TileColumn, Tile } from 'components/TileGrid';
-
 const Layout = styled('div')`
+  width: 100%;
   min-width: 20em;
   max-width: 50em;
-  justify-content: center;
-  align-items: center;
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-template-columns: 10% 1fr 10%;
-  grid-template-areas: "back   title    ."
-                       ".      playlist ."
-                       ". button   .";
+  grid-template-areas: "back  title    ."
+                       ".     playlist ."
+                       ".     button   .";
   grid-row-gap: 1em;
-  width: 100%;
+  justify-content: center;
+  align-items: center;
   margin: .5em auto;
   padding-left: .5em;
   padding-right: .5em;
@@ -36,7 +34,6 @@ const Playlist = styled(PlaylistWidget)`
   grid-area: playlist;
 `;
 
-// TODO: I should make an h2 or this.
 const PlaylistName = styled(StyledH3)`
   text-transform: uppercase;
   margin: 0;
@@ -48,6 +45,7 @@ const PlaylistName = styled(StyledH3)`
   }
 `;
 
+// Note: I should make this as an svg img rather than the pseudo stuff (which is from CSS in Depth).
 const BackButton = styled('div')`
   text-align: center;
   cursor: pointer;
@@ -57,7 +55,6 @@ const BackButton = styled('div')`
   font-size: 1.5rem;
   position:relative;
   width: 100%;
-  content: '<';
 
   @media (min-width: 35em) {
     font-size: 2.5rem;
@@ -76,7 +73,6 @@ const BackButton = styled('div')`
     background: ${colors.opaqueWhite};
     left: -.325em;
     top: .125em;
-
     left: 0;
     right: 0;
     margin: 0 auto;

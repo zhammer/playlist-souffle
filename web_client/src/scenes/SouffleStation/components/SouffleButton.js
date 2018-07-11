@@ -10,6 +10,9 @@ const emojiBySouffleType = {
   album: albumEmoji
 };
 
+/**
+ *  Crossfade css transition classes for a ReactCSSTransition.
+ */
 const crossFade = css`
   &-leave {
     opacity: 1;
@@ -18,7 +21,6 @@ const crossFade = css`
     opacity: 0;
     transition: opacity .5s ease-out;
   }
-
   &-enter {
     opacity: 0;
   }
@@ -28,7 +30,9 @@ const crossFade = css`
   }
 `;
 
-// TODO: This is a pain in the a** but whatever. I want the emoji to fade.
+/**
+ *  This is a very annoying way to get the artist / album emoji to crossfade when changed.
+ */
 const souffleButtonText = (isResouffle, souffleBy) => {
   const emoji = emojiBySouffleType[souffleBy];
   const text = (isResouffle ? 'ReSouffle' : 'Souffle') + ' by ' + emoji;
@@ -47,7 +51,6 @@ const Layout = styled('div')`
   grid-template-columns: 80% 1fr;
   grid-column-gap: .25em;
   margin: 0;
-
 
   @media (min-width: 35em) {
     font-size: 1.75rem;
@@ -98,6 +101,11 @@ const StyledIcon = styled(BackForthIcon)`
   width: 1.25em;
 `;
 
+/**
+ *  The SouffleButton is a button with a left sub button (to Souffle the playlist) and a right sub
+ *  button (to toggle the current souffleBy mode). The basic left/right component should really be
+ *  moved to a SplitButton component.
+ */
 const SouffleButton = ({ isResouffle, souffleBy, onSouffleButtonClicked, onToggleButtonClicked }) => (
   <Layout>
     <StyledButtonLeft onClick={onSouffleButtonClicked}>{souffleButtonText(isResouffle, souffleBy)}</StyledButtonLeft>

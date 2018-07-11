@@ -3,9 +3,13 @@ import styled from 'react-emotion';
 
 const Frame = styled('div')`
   border-radius: 1em;
-  overflow:hidden;
+  overflow: hidden;
 `;
 
+/**
+ *  A wrapper component for a Spotify Play Button iframe. Adds a rounded border to the rectangular
+ *  iframe view.
+ */
 const PlaylistWidget = ({ uri, className }) => (
   <Frame className={className}>
     <iframe

@@ -33,9 +33,16 @@ export const handleBackButtonClicked = () => dispatch => {
   dispatch(push('/playlists'));
 };
 
+
+/**
+ *  Handle a user toggling the souffleBy button.
+ *
+ *  Note: It'd probably make sense to just dispatch a souffleByToggled() event and let the reducer
+ *  determine the nextSouffleBy. I believe I did it this way as I had initially wanted to use a
+ *  souffleBy dropdown so the associated action would be souffleByUpdated with the selected value.
+ */
 export const handleToggleButtonClicked = () => (dispatch, getState) => {
   const currentSouffleBy = getSouffleBy(getState());
-
   const nextSouffleBy = currentSouffleBy === 'artist' ? 'album' : 'artist';
   dispatch(souffleByUpdated(nextSouffleBy));
 };
