@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { handleApplicationStarted } from 'actions/app';
 import { getLoading } from 'selectors';
@@ -36,13 +35,8 @@ const mapStateToProps = (state, props) => ({
   loading: getLoading(state)
 });
 
-const mapDispatchToProps = dispatch => {
-  return bindActionCreators(
-    {
-      onApplicationStarted: handleApplicationStarted
-    },
-    dispatch
-  );
+const mapDispatchToProps = {
+  onApplicationStarted: handleApplicationStarted
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppContainer);
