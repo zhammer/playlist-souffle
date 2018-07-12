@@ -77,7 +77,7 @@ export const redirectToAuthorizationPage = () => {
 /**
  *  Fetch the current user's playlists. Default limit is set to 50.
  */
-export async function fetchPlaylists (accessToken, limit=50) {
+export async function fetchPlaylists (accessToken, limit = 50) {
   const response = await request.get(SPOTIFY_URL + '/me/playlists')
         .set('Authorization', 'Bearer ' + accessToken)
         .query({ limit });
