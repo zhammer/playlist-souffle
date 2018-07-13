@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { handleApplicationStarted } from 'actions/app';
 import { getLoading } from 'selectors';
+import withLoading from 'components/withLoading';
 import Loading from 'scenes/Loading';
 import Landing from 'scenes/Landing';
 import Playlists from 'scenes/Playlists';
 import SouffleStation from 'scenes/SouffleStation';
 
-const App = ({ history, loading }) => (
-  loading ? <Loading /> :
+const App = ({ history }) => (
   <ConnectedRouter history={history}>
     <Fragment>
       <Route path='/' exact component={Landing}/>
@@ -20,13 +20,15 @@ const App = ({ history, loading }) => (
   </ConnectedRouter>
 );
 
+const AppWithLoading = withLoading(App, Loading);
+
 class AppContainer extends Component {
   componentDidMount = () => {
     this.props.onApplicationStarted();
   }
 
   render = () => (
-    <App {...this.props} />
+    <AppWithLoading {...this.props} />
   )
 }
 
