@@ -52,7 +52,16 @@ functions:
 plugins:
   - serverless-python-requirements
   - serverless-kms-secrets
+  - serverless-domain-manager
+  - serverless-finch
 
 custom:
   kmsSecrets: ${file(kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
   spotifyClientId: b231329aba1a4c539375436a267db917
+  customDomain:
+    domainName: api.playlistsouffle.com
+    certificateName: "*.playlistsouffle.com"
+  client:
+    bucketName: playlistsouffle.com
+    distributionFolder: web_client/build
+    errorDocument: index.html
