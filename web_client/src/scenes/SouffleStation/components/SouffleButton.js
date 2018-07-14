@@ -10,6 +10,10 @@ const emojiBySouffleType = {
   album: albumEmoji
 };
 
+const generateSouffleButtonText = (isResouffle, souffleBy) => (
+  (isResouffle ? 'ReSouffle' : 'Souffle') + ' by ' + emojiBySouffleType[souffleBy]
+);
+
 /**
  *  Crossfade css transition classes for a ReactCSSTransition.
  */
@@ -29,22 +33,6 @@ const crossFade = css`
     transition: opacity .5s ease-out;
   }
 `;
-
-/**
- *  This is a very annoying way to get the artist / album emoji to crossfade when changed.
- */
-const souffleButtonText = (isResouffle, souffleBy) => {
-  const emoji = emojiBySouffleType[souffleBy];
-  const text = (isResouffle ? 'ReSouffle' : 'Souffle') + ' by ' + emoji;
-  return (
-      <ReactCSSTransitionReplace
-        transitionName={crossFade}
-        transitionEnterTimeout={500}
-        transitionLeaveTimeout={500}>
-        <div key={text}>{text}</div>
-      </ReactCSSTransitionReplace>
-  );
-};
 
 const Layout = styled('div')`
   display: grid;
@@ -106,11 +94,21 @@ const StyledIcon = styled(BackForthIcon)`
  *  button (to toggle the current souffleBy mode). The basic left/right component should really be
  *  moved to a SplitButton component.
  */
-const SouffleButton = ({ isResouffle, souffleBy, onSouffleButtonClicked, onToggleButtonClicked }) => (
-  <Layout>
-    <StyledButtonLeft onClick={onSouffleButtonClicked}>{souffleButtonText(isResouffle, souffleBy)}</StyledButtonLeft>
-    <StyledButtonRight onClick={onToggleButtonClicked}><StyledIcon/></StyledButtonRight>
-  </Layout>
-);
+const SouffleButton = ({ isResouffle, souffleBy, onSouffleButtonClicked, onToggleButtonClicked }) => {
+  const souffleButtonText = generateSouffleButtonText(isResouffle, souffleBy);
+  return (
+    <Layout>
+      <StyledButtonLeft onClick={onSouffleButtonClicked}>
+        <ReactCSSTransitionReplace
+          transitionName={crossFade}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}>
+          <div key={souffleButtonText}>{souffleButtonText}</div>
+        </ReactCSSTransitionReplace>
+      </StyledButtonLeft>
+      <StyledButtonRight onClick={onToggleButtonClicked}><StyledIcon/></StyledButtonRight>
+    </Layout>
+  );
+};
 
 export default SouffleButton;
