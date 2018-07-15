@@ -76,7 +76,8 @@ def handler(event, context):
     # Return success
     headers = {
         'Location': souffled_playlist_uri,
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': True
+        'Access-Control-Allow-Origin': 'https://playlistsouffle.com',
+        'Access-Control-Allow-Credentials': True,
+        'Access-Control-Expose-Headers': 'location'
     }
     return generate_api_gateway_response(201, headers=headers)

@@ -7,7 +7,7 @@
     "connected-react-router": "^4.3.0",
     "emotion": "^9.2.4",
     "flubber": "^0.4.2",
-    "query-string": "^6.1.0",
+    "qs": "^6.5.2",
     "react": "^16.4.1",
     "react-css-transition-replace": "^3.0.3",
     "react-dom": "^16.4.1",
@@ -28,5 +28,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "proxy": "https://wumxvuo5nb.execute-api.us-east-1.amazonaws.com/dev"
+  "proxy": "https://api.playlistsouffle.com"
 }

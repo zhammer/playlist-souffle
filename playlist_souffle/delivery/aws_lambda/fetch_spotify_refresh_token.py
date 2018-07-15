@@ -116,7 +116,7 @@ def handler(event, context):
     return generate_api_gateway_response(
         200,
         headers={
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': 'https://playlistsouffle.com',
             'Access-Control-Allow-Credentials': True
         },
         body={

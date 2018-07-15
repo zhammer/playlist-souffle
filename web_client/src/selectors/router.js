@@ -1,4 +1,4 @@
-import queryString from 'query-string';
+import queryString from 'qs';
 import { createSelector } from 'reselect';
 
 export const getPathname = state => state.router.location.pathname;
@@ -10,7 +10,7 @@ export const getSearch = state => state.router.location.search;
  */
 export const getAuthCode = createSelector(
   [getSearch],
-  search => queryString.parse(search).code
+  search => queryString.parse(search, { ignoreQueryPrefix: true }).code
 );
 
 /**
@@ -36,5 +36,5 @@ export const getPathPlaylistId = createSelector(
  */
 export const getSouffledFromId = createSelector(
   [getSearch],
-  search => queryString.parse(search).souffledFrom
+  search => queryString.parse(search, { ignoreQueryPrefix: true }).souffledFrom
 );

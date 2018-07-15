@@ -1,10 +1,12 @@
 import request from 'superagent';
 
-const REDIRECT_URI = 'http://192.168.1.151:3000'; // 'http://127.0.0.1:3000' for local dev.
+const REDIRECT_URI = 'https://playlistsouffle.com';
 
 // --------------------
 // Playlist Souffle API
 // --------------------
+
+const BASE = 'https://api.playlistsouffle.com';
 
 /**
  *  Fetch a spotify accessToken (used for temporary access to the Spotify API) and a refreshToken
@@ -14,7 +16,7 @@ const REDIRECT_URI = 'http://192.168.1.151:3000'; // 'http://127.0.0.1:3000' for
 export async function fetchRefreshToken (authCode) {
   const body = 'redirectUri=' + REDIRECT_URI;
 
-  const response = await request.post('/refreshtoken')
+  const response = await request.post(BASE + '/refreshtoken')
         .set('Authorization', 'Bearer ' + authCode)
         .send(body);
 
@@ -31,7 +33,7 @@ export async function fetchRefreshToken (authCode) {
  */
 export async function fetchAccessToken (refreshToken) {
 
-  const response = await request.post('/accesstoken')
+  const response = await request.post(BASE + '/accesstoken')
         .set('Authorization', 'Bearer ' + refreshToken);
 
   if (response.status !== 200) {
@@ -45,7 +47,7 @@ export async function fetchAccessToken (refreshToken) {
  *  Souffle a playlist.
  */
 export async function souffle (accessToken, playlistUri, souffleBy) {
-  const response = await request.post('/souffle')
+  const response = await request.post(BASE + '/souffle')
         .set('Authorization', 'Bearer ' + accessToken)
         .send({ playlistUri })
         .send({ shuffleBy: souffleBy })
