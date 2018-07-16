@@ -8,11 +8,12 @@ export const handleSouffleButtonClicked = () => (dispatch, getState) => {
   const state = getState();
   const currentPlaylist = getCurrentPlaylist(state);
   const accessToken = getAccessToken(state);
+  const souffleBy = getSouffleBy(state);
   const souffledFrom = getSouffledFrom(state);
   const originalPlaylist = souffledFrom || currentPlaylist;
 
   dispatch(souffleStarted());
-  souffle(accessToken, originalPlaylist.uri, 'album')
+  souffle(accessToken, originalPlaylist.uri, souffleBy)
     .then(souffledUri => {
       dispatch(fetchPlaylistStarted());
       fetchPlaylist(accessToken, souffledUri)
