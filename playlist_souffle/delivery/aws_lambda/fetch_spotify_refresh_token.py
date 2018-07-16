@@ -1,7 +1,5 @@
 """AWS lambda function for obtaining a spotify refresh token (and access token) given a spotify
 authorization token.
-
-TODO: Cleanup delivery functions.
 """
 
 
@@ -12,7 +10,8 @@ import requests
 from playlist_souffle.delivery.aws_lambda.util import (
     decrypt_kms_string,
     extract_bearer_token_from_api_event,
-    generate_api_gateway_response
+    generate_api_gateway_response,
+    with_cors
 )
 
 SPOTIFY_REFRESH_TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token'
@@ -71,22 +70,16 @@ def fetch_spotify_refresh_token(authorization_token, redirect_uri, client_id, cl
     )
     return refresh_token, access_token
 
-
+@with_cors('https://playlistsouffle.com', True)
 def handler(event, context):
     """AWS lambda event handler"""
-
     logger.debug('Handling event "%s". Context: "%s"', event, context)
 
-    # If event doesn't contain an Authorization header, send 400 BAD_REQUEST
     try:
         authorization_token = extract_bearer_token_from_api_event(event)
     except LookupError as e:
-        return generate_api_gateway_response(
-            400,
-            body={'message':str(e)}
-        )
+        return generate_api_gateway_response(400, body={'message': 'Missing or invalid authorization.'})
 
-    # If event doesn't contain the redirectUri field, send 400 BAD_REQUEST
     try:
         redirect_uri = parse_qs(event['body'])['redirectUri'][0]
     except KeyError:
@@ -95,11 +88,9 @@ def handler(event, context):
             body={'message':'Request must contain a "redirectUri" field'}
         )
 
-    # Get environment variables
     spotify_client_id = os.environ['SPOTIFY_CLIENT_ID']
     spotify_client_secret = decrypt_kms_string(os.environ['SPOTIFY_CLIENT_SECRET'])
 
-    # Fetch refresh and access tokens. If tokens are not obtained, returned 401 UNAUTHORIZED.
     try:
         refresh_token, access_token = fetch_spotify_refresh_token(
             authorization_token,
@@ -108,17 +99,10 @@ def handler(event, context):
             spotify_client_secret
         )
     except requests.HTTPError:
-        return generate_api_gateway_response(
-            401
-        )
+        return generate_api_gateway_response(401)
 
-    # Return refresh and access tokens with 200 OK status code.
     return generate_api_gateway_response(
         200,
-        headers={
-            'Access-Control-Allow-Origin': 'https://playlistsouffle.com',
-            'Access-Control-Allow-Credentials': True
-        },
         body={
             'refreshToken':refresh_token,
             'accessToken':access_token

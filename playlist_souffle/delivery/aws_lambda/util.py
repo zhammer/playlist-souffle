@@ -8,6 +8,7 @@ Available functions:
 """
 
 from base64 import b64decode
+import functools
 import json
 import logging
 import re
@@ -88,3 +89,39 @@ def generate_api_gateway_response(status_code, headers=None, body=None):
 
     return {k: v for k, v in response.items()
             if v and not v == 'null'}
+
+def with_cors(allow_origin, allow_credentials, expose_headers=None):
+    """Parametrized decorator that takes a function which returns an http response and returns
+    a function that will add cors headers to the decorated functions http response.
+
+    >>> @with_cors('website.com', True, 'Location')
+    ... def func():
+    ...     return { 'status_code': 201, 'headers': { 'Location': 'some uri' }}
+    >>> func()
+    {'status_code': 201, 'headers': {'Location': 'some uri', 'Access-Control-Allow-Origin': 'website.com', 'Access-Control-Allow-Credentials': True, 'Access-Control-Expose-Headers': 'Location'}}
+
+    # Without headers
+    >>> @with_cors('website.com', True)
+    ... def func():
+    ...     return {'status_code': 400}
+    >>> func()
+    {'status_code': 400, 'headers': {'Access-Control-Allow-Origin': 'website.com', 'Access-Control-Allow-Credentials': True, 'Access-Control-Expose-Headers': None}}
+
+    >>>
+    """
+    def decorate(func):
+        @functools.wraps(func)
+        def inner(*args, **kwargs):
+            response = func(*args, **kwargs)
+            headers = response.get('headers', {})
+            return {
+                **response,
+                'headers': {
+                    **headers,
+                    'Access-Control-Allow-Origin': allow_origin,
+                    'Access-Control-Allow-Credentials': allow_credentials,
+                    'Access-Control-Expose-Headers': expose_headers
+                }
+            }
+        return inner
+    return decorate
