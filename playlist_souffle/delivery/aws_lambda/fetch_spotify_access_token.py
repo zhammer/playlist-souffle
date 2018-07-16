@@ -1,7 +1,4 @@
-"""AWS lambda function for obtaining a spotify access token given a spotify refresh token.
-
-TODO: Cleanup delivery functions.
-"""
+"""AWS lambda function for obtaining a spotify access token given a spotify refresh token."""
 
 import logging
 import os
@@ -9,7 +6,8 @@ import requests
 from playlist_souffle.delivery.aws_lambda.util import (
     decrypt_kms_string,
     extract_bearer_token_from_api_event,
-    generate_api_gateway_response
+    generate_api_gateway_response,
+    with_cors
 )
 
 
@@ -62,25 +60,19 @@ def fetch_spotify_access_token(refresh_token, client_id, client_secret):
     return access_token
 
 
+@with_cors('https://playlistsouffle.com', True)
 def handler(event, context):
     """AWS lambda event handler"""
-
     logger.debug('Handling event "%s". Context: "%s"', event, context)
 
-    # Get environment variables
     spotify_client_id = os.environ['SPOTIFY_CLIENT_ID']
     spotify_client_secret = decrypt_kms_string(os.environ['SPOTIFY_CLIENT_SECRET'])
 
-    # If event doesn't contain a valid Bearer token, return 400 BAD_REQUEST
     try:
         refresh_token = extract_bearer_token_from_api_event(event)
     except LookupError as e:
-        return generate_api_gateway_response(
-            400,
-            body={'message':str(e)}
-        )
+        return generate_api_gateway_response(400, body={'message': 'Missing or invalid authorization'})
 
-    # Fetch access token. If token is not obtained, return 401 UNAUTHORIZED.
     try:
         access_token = fetch_spotify_access_token(
             refresh_token,
@@ -90,12 +82,4 @@ def handler(event, context):
     except requests.HTTPError:
         return generate_api_gateway_response(401)
 
-    # Return access token with 200 OK status code.
-    return generate_api_gateway_response(
-        200,
-        headers={
-            'Access-Control-Allow-Origin': 'https://playlistsouffle.com',
-            'Access-Control-Allow-Credentials': True
-        },
-        body={'accessToken':access_token}
-    )
+    return generate_api_gateway_response(200, body={'accessToken': access_token})
