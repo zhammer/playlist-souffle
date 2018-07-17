@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-"urllib3" = "*"
 "boto3" = "*"
 requests = "*"
 spotipy = "*"
