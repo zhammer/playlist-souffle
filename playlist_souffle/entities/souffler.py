@@ -12,7 +12,7 @@ from playlist_souffle.entities.souffler_util import (
     souffle_tracks
 )
 
-def generate_souffled_playlist(original_playlist, user_id, shuffle_by, related_tracks_by_track, souffle_time):
+def generate_souffled_playlist(original_playlist, user_id, souffle_by, related_tracks_by_track, souffle_time):
     """Given an original playlist, create a new playlist in which each track from the original
     playlist is swapped with one of its related tracks based on the related_tracks_by_track mapping.
     A 'souffled' name and description will be generated for the new playlist.
@@ -24,7 +24,7 @@ def generate_souffled_playlist(original_playlist, user_id, shuffle_by, related_t
     souffled_playlist_name = generate_souffle_name(original_playlist.name)
     souffled_playlist_description = generate_souffle_description(
         original_playlist.name,
-        shuffle_by,
+        souffle_by,
         souffle_time
     )
     return Playlist(

@@ -96,14 +96,14 @@ paths:
                 playlistUri:
                   type: string
                   description: Uri of the playlist to be souffled.
-                shuffleBy:
+                souffleBy:
                   type: string
-                  description: Type of collection to shuffle by.
+                  description: Type of collection to souffle by.
                   enum: [artist, album]
               example:
                 playlistUri: spotify:user:zachthehammer:playlist:5u1XuTMnpZqhAfkYob8X6U
                 userId: zachthehammer
-                shuffleBy: album
+                souffleBy: album
       responses:
         '201':
           description: Created
