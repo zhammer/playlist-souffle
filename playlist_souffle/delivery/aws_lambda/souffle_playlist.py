@@ -1,9 +1,10 @@
 """AWS lambda function for shuffling a playlist's tracks by artist or album."""
+from datetime import datetime as dt
 import json
 import logging
 from playlist_souffle.definitions.exception import SouffleParameterError, SouffleSpotifyError
 from playlist_souffle.gateways.spotify import SpotifyGateway
-from playlist_souffle.use_cases.souffle_playlist import souffle_playlist
+from playlist_souffle import souffle_playlist
 from playlist_souffle.delivery.aws_lambda.util import (
     extract_bearer_token_from_api_event,
     generate_api_gateway_response,
@@ -47,7 +48,7 @@ def handler(event, context):
         return generate_spotify_exception_response(e)
 
     try:
-        souffled_playlist_uri = souffle_playlist(spotify, playlist_uri, souffle_by)
+        souffled_playlist_uri = souffle_playlist(spotify, playlist_uri, souffle_by, dt.now())
     except SouffleParameterError as e:
         return generate_api_gateway_response(400, body={'message': e})
     except SouffleSpotifyError as e:

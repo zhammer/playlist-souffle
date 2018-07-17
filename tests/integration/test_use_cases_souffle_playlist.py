@@ -3,9 +3,8 @@
 from datetime import datetime as dt
 from unittest.mock import Mock, patch
 import pytest
-from playlist_souffle.definitions.playlist import Playlist
-from playlist_souffle.definitions.track import Track
-from playlist_souffle.use_cases.souffle_playlist import souffle_playlist
+from playlist_souffle.definitions import Playlist, Track
+from playlist_souffle import souffle_playlist
 
 
 class TestSoufflePlaylist:
@@ -38,9 +37,7 @@ class TestSoufflePlaylist:
         spotify_mock.fetch_current_user_id.return_value = user_id
 
         # When
-        with patch('playlist_souffle.use_cases.souffle_playlist.dt') as mock_dt:
-            mock_dt.now.return_value = injected_dt
-            souffled_playlist_uri = souffle_playlist(spotify_mock, playlist_uri, 'artist')
+        souffled_playlist_uri = souffle_playlist(spotify_mock, playlist_uri, 'artist', injected_dt)
 
         # Then
         expected_playlist = Playlist(

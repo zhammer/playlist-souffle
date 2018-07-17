@@ -1,7 +1,7 @@
 """Unit test module for playlist_souffle.entities.souffler."""
 
 import pytest
-from playlist_souffle.definitions.track import Track
+from playlist_souffle.definitions import Track
 from playlist_souffle.entities.souffler_util import (
     generate_souffle_name,
     souffle_tracks

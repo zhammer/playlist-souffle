@@ -7,7 +7,7 @@ Available classes:
 from concurrent import futures
 from spotipy import Spotify
 from playlist_souffle.definitions.exception import SouffleParameterError
-from playlist_souffle.definitions.playlist import Playlist
+from playlist_souffle.definitions import Playlist
 from playlist_souffle.gateways.spotify_util import (
     extract_playlist_uri_components,
     fetch_playlist_metadata,

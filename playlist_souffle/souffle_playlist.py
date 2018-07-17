@@ -5,10 +5,10 @@ Available functions:
 """
 
 from datetime import datetime as dt
-from playlist_souffle.definitions.playlist import Playlist
+from playlist_souffle.definitions import Playlist
 import playlist_souffle.entities.souffler as souffler_entity
 
-def souffle_playlist(spotify, playlist_uri, souffle_by):
+def souffle_playlist(spotify, playlist_uri, souffle_by, souffle_time):
     """Create a souffled playlist from an original playlist, where each track on the original
     playlist is swapped out with a related track, and save the souffled playlist to the current user's
     account. The related tracks of a track are determined by souffle_by. For instance, if souffle_by
@@ -28,7 +28,7 @@ def souffle_playlist(spotify, playlist_uri, souffle_by):
         current_user_id,
         souffle_by,
         related_tracks_by_track,
-        souffle_time=dt.now()
+        souffle_time=souffle_time
     )
 
     souffled_playlist_uri = spotify.create_playlist(souffled_playlist)
