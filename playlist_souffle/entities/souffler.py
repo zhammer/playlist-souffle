@@ -5,7 +5,7 @@ Available functions:
   related_tracks_by_track for souffleing and other metadata.
 """
 
-from playlist_souffle.definitions.playlist import Playlist
+from playlist_souffle.definitions import Playlist
 from playlist_souffle.entities.souffler_util import (
     generate_souffle_description,
     generate_souffle_name,

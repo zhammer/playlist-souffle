@@ -3,8 +3,7 @@
 from datetime import datetime as dt
 from unittest.mock import Mock, patch
 import pytest
-from playlist_souffle.definitions.playlist import Playlist
-from playlist_souffle.definitions.track import Track
+from playlist_souffle.definitions import Playlist, Track
 from playlist_souffle import souffle_playlist
 
 

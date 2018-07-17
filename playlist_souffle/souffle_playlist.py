@@ -5,7 +5,7 @@ Available functions:
 """
 
 from datetime import datetime as dt
-from playlist_souffle.definitions.playlist import Playlist
+from playlist_souffle.definitions import Playlist
 import playlist_souffle.entities.souffler as souffler_entity
 
 def souffle_playlist(spotify, playlist_uri, souffle_by, souffle_time):

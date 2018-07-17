@@ -4,7 +4,7 @@ import pytest
 from unittest.mock import Mock
 import spotipy
 from playlist_souffle.definitions.exception import SouffleSpotifyError
-from playlist_souffle.definitions.track import Track
+from playlist_souffle.definitions import Track
 from playlist_souffle.gateways.spotify import SpotifyGateway
 
 from playlist_souffle.gateways.spotify_util import (

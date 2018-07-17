@@ -13,7 +13,7 @@ Available functions:
 
 import functools
 import spotipy
-from playlist_souffle.definitions.track import Track
+from playlist_souffle.definitions import Track
 from playlist_souffle.definitions.exception import SouffleParameterError, SouffleSpotifyError
 
 SPOTIFY_PLAYLIST_METADATA_FIELDS = 'name, description'
