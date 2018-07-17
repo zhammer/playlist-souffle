@@ -10,10 +10,10 @@ import random
 import re
 
 SOUFFLE_NAME_RE = r'(?P<playlist_name>.*)\[souffle(?:\^(?P<souffle_degree>\d+))?\]$'
-SOUFFLE_DESCRIPTION_FMT = 'Souffled from "{original_name}" by "{shuffle_by}" at {time_of_souffle}.'
+SOUFFLE_DESCRIPTION_FMT = 'Souffled from "{original_name}" by "{souffle_by}" at {time_of_souffle}.'
 
 
-def generate_souffle_description(original_name, shuffle_by, time_of_souffle):
+def generate_souffle_description(original_name, souffle_by, time_of_souffle):
     """Generate a description for a souffled playlist.
 
     >>> from datetime import datetime as dt
@@ -23,7 +23,7 @@ def generate_souffle_description(original_name, shuffle_by, time_of_souffle):
     """
     return SOUFFLE_DESCRIPTION_FMT.format(
         original_name=original_name,
-        shuffle_by=shuffle_by,
+        souffle_by=souffle_by,
         time_of_souffle=time_of_souffle
     )
 

@@ -64,7 +64,7 @@ class SpotifyGateway:
                               for track_record in related_track_data}
 
         else:
-            raise SouffleParameterError('Invalid shuffle_by type "{}".'.format(related_by))
+            raise SouffleParameterError('Invalid souffle type "{}".'.format(related_by))
 
         return related_tracks
 

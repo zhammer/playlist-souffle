@@ -50,7 +50,7 @@ export async function souffle (accessToken, playlistUri, souffleBy) {
   const response = await request.post(BASE + '/souffle')
         .set('Authorization', 'Bearer ' + accessToken)
         .send({ playlistUri })
-        .send({ shuffleBy: souffleBy })
+        .send({ souffleBy })
         .type('form');
 
   if (response.status !== 201) {

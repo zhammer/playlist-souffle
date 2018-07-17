@@ -38,7 +38,7 @@ def handler(event, context):
     try:
         request_body = parse_qs(event['body'])
         playlist_uri = request_body['playlistUri'][0]
-        shuffle_by = request_body['shuffleBy'][0]
+        souffle_by = request_body['souffleBy'][0]
     except LookupError as e:
         return generate_api_gateway_response(400, body={'message': 'Missing field: "{}".'.format(e)})
 
@@ -48,7 +48,7 @@ def handler(event, context):
         return generate_spotify_exception_response(e)
 
     try:
-        souffled_playlist_uri = souffle_playlist(spotify, playlist_uri, shuffle_by)
+        souffled_playlist_uri = souffle_playlist(spotify, playlist_uri, souffle_by)
     except SouffleParameterError as e:
         return generate_api_gateway_response(400, body={'message': e})
     except SouffleSpotifyError as e:
