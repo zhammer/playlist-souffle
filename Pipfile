@@ -13,6 +13,7 @@ attrs = "*"
 awscli = "*"
 pytest = "*"
 pytest-cov = "*"
+pytest-hammertime = "*"
 
 [requires]
 python_version = "3.6"
