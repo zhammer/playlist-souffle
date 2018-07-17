@@ -14,11 +14,9 @@ const BASE = 'https://api.playlistsouffle.com';
  *  authCode obtained via the spotify authorization page.
  */
 export async function fetchRefreshToken (authCode) {
-  const body = 'redirectUri=' + REDIRECT_URI;
-
   const response = await request.post(BASE + '/refreshtoken')
         .set('Authorization', 'Bearer ' + authCode)
-        .send(body);
+        .send({ redirectUri: REDIRECT_URI });
 
   if (response.status !== 200) {
     throw response.body;
@@ -50,8 +48,7 @@ export async function souffle (accessToken, playlistUri, souffleBy) {
   const response = await request.post(BASE + '/souffle')
         .set('Authorization', 'Bearer ' + accessToken)
         .send({ playlistUri })
-        .send({ souffleBy })
-        .type('form');
+        .send({ souffleBy });
 
   if (response.status !== 201) {
     throw response.body;

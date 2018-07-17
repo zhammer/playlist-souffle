@@ -1,11 +1,9 @@
 """AWS lambda function for obtaining a spotify refresh token (and access token) given a spotify
 authorization token.
 """
-
-
+import json
 import logging
 import os
-from urllib.parse import parse_qs
 import requests
 from playlist_souffle.delivery.aws_lambda.util import (
     decrypt_kms_string,
@@ -80,8 +78,9 @@ def handler(event, context):
     except LookupError as e:
         return generate_api_gateway_response(400, body={'message': 'Missing or invalid authorization.'})
 
+    body = json.loads(event['body'])
     try:
-        redirect_uri = parse_qs(event['body'])['redirectUri'][0]
+        redirect_uri = body['redirectUri']
     except KeyError:
         return generate_api_gateway_response(
             400,

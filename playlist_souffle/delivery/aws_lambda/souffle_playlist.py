@@ -1,7 +1,6 @@
 """AWS lambda function for shuffling a playlist's tracks by artist or album."""
-
+import json
 import logging
-from urllib.parse import parse_qs
 from playlist_souffle.definitions.exception import SouffleParameterError, SouffleSpotifyError
 from playlist_souffle.gateways.spotify import SpotifyGateway
 from playlist_souffle.use_cases.souffle_playlist import souffle_playlist
@@ -35,10 +34,10 @@ def handler(event, context):
     except LookupError as e:
         return generate_api_gateway_response(400, body={'message': 'Missing or invalid authorization'})
 
+    body = json.loads(event['body'])
     try:
-        request_body = parse_qs(event['body'])
-        playlist_uri = request_body['playlistUri'][0]
-        souffle_by = request_body['souffleBy'][0]
+        playlist_uri = body['playlistUri']
+        souffle_by = body['souffleBy']
     except LookupError as e:
         return generate_api_gateway_response(400, body={'message': 'Missing field: "{}".'.format(e)})
 
