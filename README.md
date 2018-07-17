@@ -1,4 +1,4 @@
-# [Playlist Souffle](https://playlistsouffle.com)
+# Playlist Souffle (https://playlistsouffle.com)
 Breathe life into an old playlist by swapping out each track for another track on the same album or by the same artist.
 
 ![Website Demo](docs/playlist-souffle-demo.gif)
