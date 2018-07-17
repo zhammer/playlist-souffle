@@ -9,16 +9,9 @@ Before souffle              |  After souffle (by album)
 
 Check out the API documentation on [swagger](https://app.swaggerhub.com/apis/zhammer/playlist-souffle/1.0.0-oas3).
 
-### Setting up virtual environment
+### Setting up the virtual environment (using [pipenv](https://docs.pipenv.org/))
 ```bash
-# Create the virtual environment directory
-virtualenv venv --python=python3
-
-# Enter venv
-source venv/bin/activate
-
-# Install
-pip install -r requirements.txt
+pipenv shell
 ```
 
 ### [scripts/souffle_tester.py](scripts/souffle_tester.py)
