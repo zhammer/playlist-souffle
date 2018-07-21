@@ -74,7 +74,7 @@ class SpotifyGateway:
         """Fetch a related_tracks_by_track mapping, where each related_tracks set is the set of
         tracks related to a track in TRACKS by RELATED_BY.
         """
-        with futures.ThreadPoolExecutor(max_workers=20) as executor:
+        with futures.ThreadPoolExecutor(max_workers=10) as executor:
             related_tracks_by_track = dict(executor.map(
                 lambda track: (track, self.fetch_related_tracks(track, related_by)),
                 tracks
