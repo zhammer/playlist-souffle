@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 def setup_sentry():
   sentry_sdk.init(
-    dsn="https://aaf4d2452f84464cafdc6004d89c1724@sentry.io/1357179",
+    dsn="https://f97dbaa5f3c9459d972879400952e571@sentry.io/1443649",
     integrations=[AwsLambdaIntegration()]
   )
 
