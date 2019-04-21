@@ -59,4 +59,4 @@ def handler(event, context):
     except SouffleSpotifyError as e:
         return generate_spotify_exception_response(e)
 
-    return generate_api_gateway_response(201, headers={'Location': souffled_playlist_uri})
+    return generate_api_gateway_response(201, headers={'Location': f'spotify:playlist:{souffled_playlist_uri}'})

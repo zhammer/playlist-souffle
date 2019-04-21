@@ -12,6 +12,8 @@ provider:
       Resource: ${self:custom.kmsSecrets.keyArn}
 
 package:
+  exclude:
+    - "**"
   include:
     - playlist_souffle/**
 

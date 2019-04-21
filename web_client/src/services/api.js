@@ -87,14 +87,12 @@ export async function fetchPlaylists (accessToken, limit = 50) {
 }
 
 /**
- *  Given a spotify playlist uri (i.e. 'spotify:user:zach:playlist:123'), return a path for the
+ *  Given a spotify playlist uri (i.e. 'spotify:playlist:123'), return a path for the
  *  playlist (i.e. '/users/zach/playlists/123').
  */
 export const playlistPathFromUri = playlistUri => {
-  const substrings = playlistUri.split(':');
-  const user = substrings[2];
-  const playlist = substrings[4];
-  return '/users/' + user + '/playlists/' + playlist;
+  const playlistId = playlistUri.split(':')[2];
+  return '/playlists/' + playlistId;
 };
 
 /**

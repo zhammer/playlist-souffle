@@ -6,10 +6,11 @@ Available classes:
 
 from concurrent import futures
 from spotipy import Spotify
+import requests
 from playlist_souffle.definitions.exception import SouffleParameterError
 from playlist_souffle.definitions import Playlist
 from playlist_souffle.gateways.spotify_util import (
-    extract_playlist_uri_components,
+    BASE,
     fetch_playlist_metadata,
     fetch_playlist_track_data,
     pluck_track,
@@ -28,22 +29,22 @@ class SpotifyGateway:
     """
 
     @raise_spotipy_error_as_souffle_error
-    def __init__(self, access_token):
+    def __init__(self, access_token: str):
         """C'tor"""
+        self._access_token = access_token
         self._spotify = Spotify(access_token, requests_session=False)
 
 
     @raise_spotipy_error_as_souffle_error
-    def fetch_playlist(self, playlist_uri):
+    def fetch_playlist(self, playlist_uri: str):
         """Fetch a Playlist namedtuple representation of a spotify playlist given a playlist_uri."""
-        user_id, playlist_id = extract_playlist_uri_components(playlist_uri)
+        playlist_id = playlist_uri.split(':')[-1]
 
-        name, description = fetch_playlist_metadata(self._spotify, user_id, playlist_id)
-        track_data = fetch_playlist_track_data(self._spotify, user_id, playlist_id)
+        name, description = fetch_playlist_metadata(playlist_id, self._access_token)
+        track_data = fetch_playlist_track_data(playlist_id, self._access_token)
         tracks = [pluck_track(track_record) for track_record in track_data]
 
         return Playlist(
-            user_id=user_id,
             name=name,
             tracks=tracks,
             description=description
@@ -84,16 +85,31 @@ class SpotifyGateway:
 
 
     @raise_spotipy_error_as_souffle_error
-    def create_playlist(self, playlist, is_public=True):
+    def create_playlist(self, playlist: Playlist, is_public: bool = True) -> str:
         """Create a new playlist for the given Playlist namedtuple.  Return the uri of the new
         playlist.
         """
-        response = self._spotify.user_playlist_create(playlist.user_id, playlist.name, is_public)
-        playlist_uri, playlist_id = response['uri'], response['id']
-
-        playlist_track_ids = [track.id for track in playlist.tracks]
-        self._spotify.user_playlist_add_tracks(playlist.user_id, playlist_id, playlist_track_ids)
-        return playlist_uri
+        user_id = self.fetch_current_user_id()
+        response = requests.post(
+            f'{BASE}/users/{user_id}/playlists',
+            json={
+                'name': playlist.name,
+                'description': playlist.description,
+                'public': is_public
+            },
+            headers={'Authorization': f'Bearer {self._access_token}'}
+            )
+        response_json = response.json()
+        playlist_id = response_json['id']
+        playlist_track_uris = [f'spotify:track:{track.id}' for track in playlist.tracks]
+        response = requests.post(
+            f'{BASE}/playlists/{playlist_id}/tracks',
+            params={
+                'uris': ','.join(playlist_track_uris)
+            },
+            headers={'Authorization': f'Bearer {self._access_token}'}
+            )
+        return playlist_id
 
 
     @raise_spotipy_error_as_souffle_error
