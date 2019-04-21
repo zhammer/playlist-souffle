@@ -8,12 +8,15 @@ name = "pypi"
 requests = "*"
 spotipy = "*"
 attrs = "*"
+sentry-sdk = "*"
 
 [dev-packages]
 awscli = "*"
 pytest = "*"
 pytest-cov = "*"
 pytest-hammertime = "*"
+pylint = "*"
+mypy = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"

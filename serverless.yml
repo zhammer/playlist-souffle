@@ -2,7 +2,7 @@ service: playlist-souffle
 
 provider:
   name: aws
-  runtime: python3.6
+  runtime: python3.7
 
   # TODO: Move to a fetch-spotify-access-token local role.
   iamRoleStatements:
@@ -12,6 +12,8 @@ provider:
       Resource: ${self:custom.kmsSecrets.keyArn}
 
 package:
+  exclude:
+    - "**"
   include:
     - playlist_souffle/**
 

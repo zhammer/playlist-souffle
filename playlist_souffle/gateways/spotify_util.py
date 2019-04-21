@@ -11,11 +11,14 @@ Available functions:
 
 """
 
+from typing import Tuple
 import functools
 import spotipy
+import requests
 from playlist_souffle.definitions import Track
 from playlist_souffle.definitions.exception import SouffleParameterError, SouffleSpotifyError
 
+BASE = 'https://api.spotify.com/v1'
 SPOTIFY_PLAYLIST_METADATA_FIELDS = 'name, description'
 SPOTIFY_PLAYLIST_TRACK_FIELDS = 'items(track(id, artists.id, album.id))'
 
@@ -36,20 +39,6 @@ def raise_spotipy_error_as_souffle_error(func):
     return inner
 
 
-def extract_playlist_uri_components(playlist_uri):
-    """Extract the user_id and playlist_id of a playlist from its spotify uri.
-    Raises a SouffleParameterError if playlist uri isn't correctly formatted.
-
-    >>> extract_playlist_uri_components('spotify:user:MY_USER:playlist:MY_PLAYLIST')
-    ('MY_USER', 'MY_PLAYLIST')
-    """
-    components = playlist_uri.split(':')
-    try:
-        return components[2], components[4]
-    except IndexError:
-        raise SouffleParameterError('Invalid playlist uri: "{}"'.format(playlist_uri))
-
-
 def pluck_track(track_record, artist=None, album=None):
     """Pluck a Track namedtuple from a spotify api track object.
     Artist and album default values may be provided, in which case those field's data will not be
@@ -66,25 +55,25 @@ def pluck_track(track_record, artist=None, album=None):
     )
 
 
-def fetch_playlist_metadata(spotify, user_id, playlist_id):
+def fetch_playlist_metadata(playlist_id: str, bearer_token: str) -> Tuple[str, str]:
     """Fetch the name and description of a spotify playlist given its user_id and playlist_id."""
-    response = spotify.user_playlist(
-        user_id,
-        playlist_id,
-        fields=SPOTIFY_PLAYLIST_METADATA_FIELDS
+    response = requests.get(
+        f'{BASE}/playlists/{playlist_id}',
+        params={'fields': SPOTIFY_PLAYLIST_METADATA_FIELDS},
+        headers={'Authorization': f'Bearer {bearer_token}'}
     )
+    response_json = response.json()
+    return response_json['name'], response_json['description']
 
-    return response['name'], response['description']
 
-
-def fetch_playlist_track_data(spotify, user_id, playlist_id):
+def fetch_playlist_track_data(playlist_id: str, bearer_token: str):
     """Fetch a list of spotify api track objects as raw data. Only fetch the track.id,
     track.artists.id, and track.album.id fields.
 
     """
-    response = spotify.user_playlist_tracks(
-        user_id,
-        playlist_id,
-        fields=SPOTIFY_PLAYLIST_TRACK_FIELDS
+    response = requests.get(
+        f'{BASE}/playlists/{playlist_id}/tracks',
+        params={'fields': SPOTIFY_PLAYLIST_TRACK_FIELDS},
+        headers={'Authorization': f'Bearer {bearer_token}'}
     )
-    return [item['track'] for item in response['items']]
+    return [item['track'] for item in response.json()['items']]

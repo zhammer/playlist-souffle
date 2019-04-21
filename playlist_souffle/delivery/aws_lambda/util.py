@@ -13,10 +13,19 @@ import json
 import logging
 import re
 import boto3
+import sentry_sdk
+from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 
 EXTRACT_BEARER_TOKEN_RE = r'Bearer ([^\s]+)$'
 
 logger = logging.getLogger(__name__)
+
+
+def setup_sentry():
+  sentry_sdk.init(
+    dsn="https://f97dbaa5f3c9459d972879400952e571@sentry.io/1443649",
+    integrations=[AwsLambdaIntegration()]
+  )
 
 
 def decrypt_kms_string(encrypted_string):

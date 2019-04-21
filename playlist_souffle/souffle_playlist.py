@@ -14,8 +14,6 @@ def souffle_playlist(spotify, playlist_uri, souffle_by, souffle_time):
     account. The related tracks of a track are determined by souffle_by. For instance, if souffle_by
     is 'artist', each track wil be souffled with another track by the same artist.
     """
-    current_user_id = spotify.fetch_current_user_id()
-
     original_playlist = spotify.fetch_playlist(playlist_uri)
 
     related_tracks_by_track = spotify.fetch_related_tracks_by_track(
@@ -25,7 +23,6 @@ def souffle_playlist(spotify, playlist_uri, souffle_by, souffle_time):
 
     souffled_playlist = souffler_entity.generate_souffled_playlist(
         original_playlist,
-        current_user_id,
         souffle_by,
         related_tracks_by_track,
         souffle_time=souffle_time

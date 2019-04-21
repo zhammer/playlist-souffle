@@ -1,17 +1,22 @@
 """AWS lambda function for shuffling a playlist's tracks by artist or album."""
-from datetime import datetime as dt
 import json
 import logging
-from playlist_souffle.definitions.exception import SouffleParameterError, SouffleSpotifyError
-from playlist_souffle.gateways.spotify import SpotifyGateway
+import os
+from datetime import datetime as dt
+
 from playlist_souffle import souffle_playlist
-from playlist_souffle.delivery.aws_lambda.util import (
-    extract_bearer_token_from_api_event,
-    generate_api_gateway_response,
-    with_cors
-)
+from playlist_souffle.definitions.exception import (SouffleParameterError,
+                                                    SouffleSpotifyError)
+from playlist_souffle.delivery.aws_lambda.util import (extract_bearer_token_from_api_event,
+                                                       generate_api_gateway_response,
+                                                       setup_sentry,
+                                                       with_cors)
+from playlist_souffle.gateways.spotify import SpotifyGateway
 
 logger = logging.getLogger(__name__)
+
+if os.environ.get('AWS_EXECUTION_ENV'):
+  setup_sentry()
 
 def generate_spotify_exception_response(exception):
     """Generate an api gateway response based on a spotify exception."""
@@ -54,4 +59,4 @@ def handler(event, context):
     except SouffleSpotifyError as e:
         return generate_spotify_exception_response(e)
 
-    return generate_api_gateway_response(201, headers={'Location': souffled_playlist_uri})
+    return generate_api_gateway_response(201, headers={'Location': f'spotify:playlist:{souffled_playlist_uri}'})
